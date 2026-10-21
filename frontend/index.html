@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afzal Siddiqui — Machine Learning Engineer</title>
+<meta name="description" content="Afzal Siddiqui — Machine Learning Engineer. Computer vision, OCR and document intelligence. Selected work in applied ML, including ComplianceAI, an AI system that audits Indian packaged goods against the Legal Metrology Act.">
+<meta name="theme-color" content="#08080a">
+
+<meta property="og:title" content="Afzal Siddiqui — Machine Learning Engineer">
+<meta property="og:description" content="Computer vision, OCR and document intelligence. Building AI that reads the real world and decides what's broken.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2308080a'/%3E%3Ctext y='72' x='50' text-anchor='middle' font-size='64' font-family='Arial Black' fill='%23ff2e88'%3EA%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<a class="skip-link" href="#home">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="#home" data-cursor="link">
+      <span class="nav__mark">AF</span>
+      <span class="nav__logo-text">Afzal&nbsp;Siddiqui</span>
+    </a>
+
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="#about" data-cursor="link"><span class="nav__num">01</span>About</a>
+      <a href="#work" data-cursor="link"><span class="nav__num">02</span>Work</a>
+      <a href="#stack" data-cursor="link"><span class="nav__num">03</span>Stack</a>
+      <a href="#journey" data-cursor="link"><span class="nav__num">04</span>Journey</a>
+      <a href="#notes" data-cursor="link"><span class="nav__num">05</span>Notes</a>
+      <a href="#contact" data-cursor="link"><span class="nav__num">06</span>Contact</a>
+      <a href="http://localhost:5000" target="_blank" rel="noopener" data-cursor="link" class="nav__ext"><span class="nav__num">↗</span>Scanner</a>
+      <a href="http://localhost:5001/admin" target="_blank" rel="noopener" data-cursor="link" class="nav__ext"><span class="nav__num">↗</span>Admin</a>
+    </nav>
+
+    <a class="btn btn--yellow nav__cta" href="#contact" data-cursor="link">
+      <span>Hire&nbsp;Me</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19L19 5M9 5h10v10"/></svg>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="home">
+    <div class="hero__bg" aria-hidden="true">
+      <span class="blob blob--pink"></span>
+      <span class="blob blob--yellow"></span>
+      <span class="hero__grid"></span>
+    </div>
+
+    <div class="hero__inner">
+      <p class="hero__eyebrow reveal">
+        <span class="pulse"></span>
+        Open to ML internships &amp; research roles — 2026
+      </p>
+
+      <h1 class="hero__title">
+        <span class="line reveal"><span class="line__in">I build AI that</span></span>
+        <span class="line reveal"><span class="line__in">reads the real <em>world</em></span></span>
+        <span class="line reveal"><span class="line__in">and <b class="stroke">decides</b></span></span>
+        <span class="line reveal"><span class="line__in">what is broken.</span></span>
+      </h1>
+
+      <div class="hero__meta reveal">
+        <p class="hero__lead">
+          I'm <strong>Afzal Siddiqui</strong> — a <strong>machine learning engineer</strong> working across
+          computer vision, OCR and document intelligence. Right now I ship
+          <strong>ComplianceAI</strong>: a system that photographs a packaged product, reads the label,
+          and decides whether it breaks Indian packaging law.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--pink" href="#work" data-cursor="link">
+            <span>See&nbsp;the&nbsp;Work</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="http://localhost:5000" target="_blank" rel="noopener" data-cursor="link">
+            <span>Live&nbsp;Scanner</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M6 12l6 6 6-6M4 20h16"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <ol class="pipeline reveal" aria-label="ComplianceAI inference pipeline">
+        <li><b>Image&nbsp;In</b><span>Label photo</span></li>
+        <li><b>Multi-Pass&nbsp;OCR</b><span>EasyOCR + OpenCV</span></li>
+        <li><b>Barcode&nbsp;Radar</b><span>PyZBar + GS1</span></li>
+        <li><b>12&nbsp;Rule&nbsp;Engine</b><span>Legal Metrology</span></li>
+        <li><b>Risk&nbsp;Scorer</b><span>Weighted 0–100</span></li>
+        <li><b>Statutory&nbsp;PDF</b><span>Form LM-2026</span></li>
+      </ol>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <span class="hero__scroll-line"></span>
+        <span>Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__set">
+        <b>EasyOCR</b><i>&#9679;</i><b class="stroke">OpenCV</b><i>&#9670;</i><b>PyZBar</b><i>&#9679;</i><b class="stroke">NumPy</b><i>&#9670;</i><b>Flask</b><i>&#9679;</i><b class="stroke">SQLite</b><i>&#9670;</i>
+      </span>
+      <span class="marquee__set">
+        <b>EasyOCR</b><i>&#9679;</i><b class="stroke">OpenCV</b><i>&#9670;</i><b>PyZBar</b><i>&#9679;</i><b class="stroke">NumPy</b><i>&#9670;</i><b>Flask</b><i>&#9679;</i><b class="stroke">SQLite</b><i>&#9670;</i>
+      </span>
+    </div>
+  </div>
+
+  <section class="section" id="about">
+    <div class="section__head reveal">
+      <span class="section__num">01</span>
+      <h2 class="section__title">Introduction</h2>
+      <span class="section__rule"></span>
+    </div>
+
+    <div class="about">
+      <div class="about__text">
+        <p class="about__intro reveal">
+          A model that can't explain itself is a liability. I build systems that show their work.
+        </p>
+        <p class="reveal">
+          I'm <strong>Afzal Siddiqui</strong>, a <strong>machine learning engineer</strong> based in
+          <strong>Lucknow, India</strong>, studying AI &amp; ML at <strong>Integral University</strong>.
+          My work sits where computer vision meets messy regulation — reading labels, extracting
+          fields, and turning them into decisions a non-technical person can act on.
+        </p>
+        <p class="reveal">
+          The flagship is <strong>ComplianceAI</strong>, built for Smart India Hackathon 2026: an engine
+          that inspects a packaged product against <strong>12 Legal Metrology rules</strong>, scores it
+          out of 100, estimates the statutory penalty, and generates an official notice. I care about
+          the unglamorous half of machine learning — preprocessing, calibration, explainability,
+          and shipping the database, PDF and admin panel that make a model usable.
+        </p>
+
+        <ul class="about__facts reveal">
+          <li><span>Name</span><b>Afzal Siddiqui</b></li>
+          <li><span>Role</span><b>Machine Learning Engineer</b></li>
+          <li><span>Based in</span><b>Lucknow, Uttar Pradesh, India</b></li>
+          <li><span>Education</span><b>B.Tech CSE (AI &amp; ML) · Integral University</b></li>
+          <li><span>Focus</span><b>Computer Vision · OCR · Document AI</b></li>
+          <li><span>Email</span><b>afzalsiddiqui1616@gmail.com</b></li>
+          <li><span>Status</span><b class="is-open">Open to opportunities</b></li>
+        </ul>
+
+        <div class="about__actions reveal">
+          <a class="btn btn--yellow" href="#contact" data-cursor="link"><span>Start a conversation</span></a>
+          <a class="btn btn--ghost" href="#work" data-cursor="link"><span>See the work</span></a>
+        </div>
+      </div>
+
+      <aside class="about__card reveal" data-tilt>
+        <div class="about__card-top">
+          <span class="about__avatar">AF</span>
+          <div>
+            <b>Afzal Siddiqui</b>
+            <small>Machine Learning Engineer</small>
+          </div>
+        </div>
+        <ul class="about__tags">
+          <li>EasyOCR</li>
+          <li>OpenCV</li>
+          <li>PyZBar</li>
+          <li>NumPy</li>
+          <li>Flask</li>
+          <li>SQLite</li>
+          <li>FPDF2</li>
+          <li>PyTorch · learning</li>
+        </ul>
+        <div class="about__card-bar"><span></span></div>
+        <small class="about__card-note">Currently building: ComplianceAI v2.0 — SIH 2026</small>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="work">
+    <div class="section__head reveal">
+      <span class="section__num">02</span>
+      <h2 class="section__title">Selected Work</h2>
+      <span class="section__rule"></span>
+      <span class="section__count">2026 — Now</span>
+    </div>
+
+    <div class="work__grid">
+
+      <article class="project reveal" data-tilt data-spotlight>
+        <div class="project__media project__media--pink">
+          <span class="project__index">01</span>
+          <span class="project__glyph">AI</span>
+        </div>
+        <div class="project__body">
+          <div class="project__meta"><span>Computer Vision</span><span>2026</span></div>
+          <h3 class="project__title">ComplianceAI</h3>
+          <p class="project__desc">Photograph any packaged product. Multi-pass OCR reads the label, a barcode radar validates it against GS1 India, and a 12-rule engine checks it against the Legal Metrology Act, 2009 — returning a weighted score, a grade and a statutory penalty band. Built for Smart India Hackathon 2026.</p>
+          <ul class="project__chips"><li>EasyOCR</li><li>OpenCV</li><li>Rule Engine</li><li>Flask</li><li>FPDF2</li></ul>
+          <a class="project__link" href="http://localhost:5000" target="_blank" rel="noopener" data-cursor="link">Open live app <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </article>
+
+      <article class="project reveal" data-tilt data-spotlight>
+        <div class="project__media project__media--yellow">
+          <span class="project__index">02</span>
+          <span class="project__glyph">CV</span>
+        </div>
+        <div class="project__body">
+          <div class="project__meta"><span>Signal Processing</span><span>2026</span></div>
+          <h3 class="project__title">Tamper &amp; Overpricing Radar</h3>
+          <p class="project__desc">Detects pasted MRP stickers by locating region boundaries and reconciling conflicting price values pulled off the label — the exact signature of illegal dual-pricing under Section 36(2). Also validates unit-sale-price maths against declared net weight.</p>
+          <ul class="project__chips"><li>OpenCV</li><li>NumPy</li><li>Heuristics</li><li>CV</li></ul>
+          <a class="project__link" href="#stack" data-cursor="link">How it works <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </article>
+
+      <article class="project reveal" data-tilt data-spotlight>
+        <div class="project__media project__media--dark">
+          <span class="project__index">03</span>
+          <span class="project__glyph">∑</span>
+        </div>
+        <div class="project__body">
+          <div class="project__meta"><span>Scoring Model</span><span>2026</span></div>
+          <h3 class="project__title">Weighted Compliance Scorer</h3>
+          <p class="project__desc">Twelve rules weighted by severity, commodity category and statutory risk, calibrated into a 0–100 score and an A–F grade, with separate first-offence and repeat-offence penalty bands. Every deduction traces back to the exact rule that caused it.</p>
+          <ul class="project__chips"><li>Weighted Scoring</li><li>Calibration</li><li>Explainability</li></ul>
+          <a class="project__link" href="#notes" data-cursor="link">Read the reasoning <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </article>
+
+      <article class="project reveal" data-tilt data-spotlight>
+        <div class="project__media project__media--pink">
+          <span class="project__index">04</span>
+          <span class="project__glyph">DB</span>
+        </div>
+        <div class="project__body">
+          <div class="project__meta"><span>MLOps &amp; Tooling</span><span>2026</span></div>
+          <h3 class="project__title">Rule Registry &amp; Admin Panel</h3>
+          <p class="project__desc">The control plane behind the model. A session-authenticated Flask panel to manage the rule registry and product catalog, inspect every scan with its OCR tokens and fraud analysis, export CSV, back up, restore and compact the SQLite database.</p>
+          <ul class="project__chips"><li>Flask</li><li>SQLite</li><li>Admin UI</li><li>Backup / Restore</li></ul>
+          <a class="project__link" href="http://localhost:5001/admin" target="_blank" rel="noopener" data-cursor="link">Open admin panel <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="work__more reveal">
+      <a class="btn btn--outline" href="#contact" data-cursor="link">
+        <span>Request the full case study</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="stack">
+    <div class="section__head reveal">
+      <span class="section__num">03</span>
+      <h2 class="section__title">The Stack</h2>
+      <span class="section__rule"></span>
+    </div>
+
+    <div class="skills">
+      <div class="skills__services">
+        <article class="service reveal">
+          <span class="service__num">01</span>
+          <h3>Computer Vision &amp; OCR</h3>
+          <p>Multi-pass preprocessing — de-skew, upscale, CLAHE contrast, adaptive threshold and denoise — before EasyOCR runs, then per-token confidence scoring and an Indian-packaging text normalizer.</p>
+          <ul><li>Multi-pass preprocessing</li><li>EasyOCR extraction</li><li>Confidence scoring</li></ul>
+        </article>
+        <article class="service reveal">
+          <span class="service__num">02</span>
+          <h3>Rule Engines &amp; Scoring</h3>
+          <p>Regulation encoded as testable predicates with severity weights, category-aware calibration and a deduction trace — so every score can be explained line by line.</p>
+          <ul><li>Weighted rule engine</li><li>Score calibration</li><li>Category classification</li></ul>
+        </article>
+        <article class="service reveal">
+          <span class="service__num">03</span>
+          <h3>Document &amp; Data AI</h3>
+          <p>Barcode and QR decoding with GS1 India prefix and checksum validation, FSSAI licence extraction, shelf-life parsing, catalog cross-referencing and FPDF2 statutory certificate generation.</p>
+          <ul><li>PyZBar + OpenCV radar</li><li>GS1 / FSSAI validation</li><li>FPDF2 certificates</li></ul>
+        </article>
+        <article class="service reveal">
+          <span class="service__num">04</span>
+          <h3>Backend &amp; MLOps</h3>
+          <p>A Flask REST API with rate limiting and CORS, a normalised SQLite schema for scans, rules and catalog, plus an admin panel for CRUD, CSV export, backup and restore.</p>
+          <ul><li>Flask REST API</li><li>SQLite schema design</li><li>Admin tooling</li></ul>
+        </article>
+      </div>
+
+      <div class="skills__bars reveal">
+        <h3 class="skills__bars-title">Stack proficiency</h3>
+        <div class="bar" data-value="92"><span class="bar__label">EasyOCR</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">92%</span></div>
+        <div class="bar" data-value="88"><span class="bar__label">OpenCV</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">88%</span></div>
+        <div class="bar" data-value="84"><span class="bar__label">PyZBar</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">84%</span></div>
+        <div class="bar" data-value="82"><span class="bar__label">NumPy</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">82%</span></div>
+        <div class="bar" data-value="80"><span class="bar__label">Flask</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">80%</span></div>
+        <div class="bar" data-value="74"><span class="bar__label">SQLite</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">74%</span></div>
+        <div class="bar" data-value="70"><span class="bar__label">FPDF2</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">70%</span></div>
+        <div class="bar" data-value="45"><span class="bar__label">PyTorch</span><span class="bar__track"><span class="bar__fill"></span></span><span class="bar__val">45%</span></div>
+        <p class="skills__note">PyTorch is the current deep-diving — transformers, fine-tuning and retrieval, applied to regulation and public infrastructure.</p>
+      </div>
+    </div>
+
+    <div class="telemetry reveal" id="telemetry" data-api="http://localhost:5000">
+      <div class="telemetry__head">
+        <span class="telemetry__status"><i></i><b id="telemetryState">Checking system</b></span>
+        <span class="mono" id="telemetryMeta">ComplianceAI API</span>
+      </div>
+      <div class="telemetry__grid">
+        <div class="telemetry__tile"><span>Model version</span><b id="tVer">v2.0.0-SIH2026</b><small id="tVerSub">Legal Metrology scanner</small></div>
+        <div class="telemetry__tile"><span>Scans processed</span><b id="tScans">2</b><small id="tScansSub">stored in SQLite</small></div>
+        <div class="telemetry__tile"><span>Rules in engine</span><b id="tRules">12</b><small id="tRulesSub">Legal Metrology Act, 2009</small></div>
+        <div class="telemetry__tile"><span>Catalog SKUs</span><b id="tSku">20</b><small id="tSkuSub">reference prices on file</small></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal"><b class="counter" data-to="12">0</b><span>Rules automated</span></div>
+      <div class="stat reveal"><b class="counter" data-to="243">0</b><span>OCR tokens per label</span></div>
+      <div class="stat reveal"><b class="counter" data-to="20">0</b><span>SKUs benchmarked</span></div>
+      <div class="stat reveal"><b class="counter" data-to="4">0</b><span>Modules shipped</span></div>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="journey">
+    <div class="section__head reveal">
+      <span class="section__num">04</span>
+      <h2 class="section__title">Journey</h2>
+      <span class="section__rule"></span>
+    </div>
+
+    <div class="timeline">
+      <article class="tl reveal">
+        <span class="tl__year">2026 — Now</span>
+        <h3 class="tl__role">Machine Learning Engineer · ComplianceAI</h3>
+        <span class="tl__company">Smart India Hackathon 2026 · Built end-to-end</span>
+        <p>Designed and shipped the whole pipeline: multi-pass OpenCV preprocessing, EasyOCR extraction with confidence scores, a PyZBar barcode radar with GS1 India validation, the 12-rule Legal Metrology engine, the weighted scorer, the tamper and overpricing intelligence layer, statutory PDF generation — then wrapped it in a Flask API and a full admin panel for the rule registry and product catalog.</p>
+      </article>
+      <article class="tl reveal">
+        <span class="tl__year">2026</span>
+        <h3 class="tl__role">Problem Research &amp; Selection</h3>
+        <span class="tl__company">Five government problem statements, reverse-engineered</span>
+        <p>Read and stress-tested SIH 2026 statements across packaged-commodities compliance, AR vocational training for industrial safety, Ministry of Ayush, Ministry of Cooperation and predictive cybercrime modelling — then wrote full technical action plans and picked the one with real-world traction to build.</p>
+      </article>
+      <article class="tl reveal">
+        <span class="tl__year">2025</span>
+        <h3 class="tl__role">Foundations · B.Tech CSE (AI &amp; ML)</h3>
+        <span class="tl__company">Integral University, Lucknow</span>
+        <p>Started with the fundamentals — Python, data structures, digital electronics and signals — alongside a first AI &amp; ML course. Every engine in ComplianceAI sits on top of that base: the OCR is only as good as the preprocessing, and the scoring is only as good as the rule set.</p>
+      </article>
+      <article class="tl reveal">
+        <span class="tl__year">Ongoing</span>
+        <h3 class="tl__role">Deepening into Modern ML</h3>
+        <span class="tl__company">Self-directed · Learning in public</span>
+        <p>Working through deep learning and modern NLP — transformers, fine-tuning, retrieval and evaluation — with a deliberate bias toward regulation, public infrastructure and problems where the cost of a wrong answer is measured in rupees.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="notes">
+    <div class="section__head reveal">
+      <span class="section__num">05</span>
+      <h2 class="section__title">Lab Notes</h2>
+      <span class="section__rule"></span>
+    </div>
+
+    <div class="notes">
+      <article class="note reveal">
+        <span class="note__num">01</span>
+        <h3>Rules beat vibes</h3>
+        <p>A regulation has twelve clauses. I encode each one as a testable predicate with a severity weight, so the output is a line-by-line explanation instead of a probability nobody can defend in an audit.</p>
+        <footer><span>Explainability</span><span>Legal logic</span></footer>
+      </article>
+      <article class="note reveal">
+        <span class="note__num">02</span>
+        <h3>OCR is a preprocessing problem</h3>
+        <p>The first pass over Indian packaging is usually garbage. Fixing contrast, de-skewing and upscaling before the model runs bought a bigger accuracy jump than any model swap I have tried.</p>
+        <footer><span>Computer vision</span><span>Signal processing</span></footer>
+      </article>
+      <article class="note reveal">
+        <span class="note__num">03</span>
+        <h3>Ship the boring parts</h3>
+        <p>A PDF certificate, a CSV export, a database backup and an admin panel are what turn a notebook into something an inspector, auditor or consumer-cell officer can actually use.</p>
+        <footer><span>MLOps</span><span>Product thinking</span></footer>
+      </article>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact">
+    <div class="contact__bg" aria-hidden="true"><span class="blob blob--pink"></span><span class="blob blob--yellow"></span></div>
+
+    <div class="section__head reveal">
+      <span class="section__num">06</span>
+      <h2 class="section__title">Let's Talk Models</h2>
+      <span class="section__rule"></span>
+    </div>
+
+    <div class="contact__grid">
+      <div class="contact__intro reveal">
+        <p class="contact__big">Got a dataset, a vision problem, or an ML role to fill?</p>
+        <p>I'm open to machine-learning internships, research assistant work and hackathon teams. I read every serious message and usually reply within a day — with code, not a brochure.</p>
+        <ul class="contact__list">
+          <li><span>Email</span><a href="mailto:afzalsiddiqui1616@gmail.com" data-cursor="link">afzalsiddiqui1616@gmail.com</a></li>
+          <li><span>Phone</span><a href="tel:+910000000000" data-cursor="link">+91 00000 00000</a></li>
+          <li><span>Location</span><b>Lucknow, Uttar Pradesh, India</b></li>
+          <li><span>Timezone</span><b>IST (GMT +5:30)</b></li>
+        </ul>
+        <div class="contact__socials">
+          <a href="#" data-missing="1" title="Add your GitHub profile URL" data-cursor="link">GitHub</a>
+          <a href="#" data-missing="1" title="Add your LinkedIn profile URL" data-cursor="link">LinkedIn</a>
+          <a href="#" data-missing="1" title="Add your Kaggle profile URL" data-cursor="link">Kaggle</a>
+          <a href="http://localhost:5000" target="_blank" rel="noopener" data-cursor="link">Live demo</a>
+          <a href="http://localhost:5001/admin" target="_blank" rel="noopener" data-cursor="link">Admin panel</a>
+        </div>
+      </div>
+
+      <form class="contact__form reveal" id="contactForm" novalidate>
+        <div class="field">
+          <input type="text" id="name" name="name" placeholder=" " autocomplete="name" required>
+          <label for="name">Your name</label>
+        </div>
+        <div class="field">
+          <input type="email" id="email" name="email" placeholder=" " autocomplete="email" required>
+          <label for="email">Email address</label>
+        </div>
+        <div class="field field--full">
+          <select id="budget" name="budget">
+            <option value="">What are you hiring for?</option>
+            <option>ML Internship</option>
+            <option>Research Assistant</option>
+            <option>Freelance / Project</option>
+            <option>Full-time ML Engineer</option>
+            <option>Hackathon Team</option>
+            <option>Just saying hi</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <textarea id="message" name="message" rows="4" placeholder=" " required></textarea>
+          <label for="message">Tell me about the problem or the role</label>
+        </div>
+        <button class="btn btn--yellow btn--full" type="submit" data-cursor="link">
+          <span>Send message</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form__status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__top">
+    <a class="footer__logo" href="#home" data-cursor="link">Afzal&nbsp;Siddiqui<span>&reg;</span></a>
+    <a class="footer__back" href="#home" data-cursor="link">Back to top <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4M6 10l6-6 6 6"/></svg></a>
+  </div>
+
+  <div class="marquee marquee--footer" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__set"><b>Open&nbsp;to&nbsp;ML&nbsp;roles</b><i>&#9679;</i><b class="stroke">Building&nbsp;in&nbsp;public</b><i>&#9670;</i><b>Computer&nbsp;Vision</b><i>&#9679;</i><b class="stroke">Learning&nbsp;every&nbsp;day</b><i>&#9670;</i></span>
+      <span class="marquee__set"><b>Open&nbsp;to&nbsp;ML&nbsp;roles</b><i>&#9679;</i><b class="stroke">Building&nbsp;in&nbsp;public</b><i>&#9670;</i><b>Computer&nbsp;Vision</b><i>&#9679;</i><b class="stroke">Learning&nbsp;every&nbsp;day</b><i>&#9670;</i></span>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <small>&copy; <span id="year">2026</span> Afzal Siddiqui. All rights reserved.</small>
+    <small class="footer__apps">
+      <a href="http://localhost:5000" target="_blank" rel="noopener" data-cursor="link">Compliance Scanner</a>
+      <a href="http://localhost:5001/admin" target="_blank" rel="noopener" data-cursor="link">Admin Console</a>
+    </small>
+    <small>Built with <b>Python</b>, <b>OpenCV</b> &amp; too much chai in <b>Lucknow</b></small>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComplianceAI — Admin Control Panel</title>
+<meta name="theme-color" content="#08080a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2308080a'/%3E%3Crect x='18' y='18' width='26' height='26' fill='%23ff2e88'/%3E%3Crect x='56' y='56' width='26' height='26' fill='%23e8ff00'/%3E%3C/svg%3E">
+<style>
+:root{
+  --black:#08080a; --black-2:#0e0e12; --surface:#121218; --surface-2:#181820; --line:#26262f;
+  --pink:#ff2e88; --pink-soft:#ff6bb5; --yellow:#e8ff00; --white:#f5f5f7; --muted:#8e8e9c;
+  --red:#ff4d6d; --green:#2bff88;
+  --font-display:"Archivo Black","Arial Black",Impact,sans-serif;
+  --font-body:"Space Grotesk",-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",Consolas,monospace;
+  --pad:clamp(1rem,2.5vw,2rem);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--black);color:var(--white);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pink);color:var(--black)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+svg{display:block}
+
+/* the hidden attribute must win over any display rule below */
+[hidden]{display:none!important}
+
+/* ============ LOGIN ============ */
+.login{min-height:100vh;display:grid;place-items:center;padding:var(--pad);position:relative;overflow:hidden}
+.login::before{content:"";position:absolute;width:60vw;height:60vw;border-radius:50%;background:var(--pink);filter:blur(140px);opacity:.28;top:-20%;right:-15%}
+.login::after{content:"";position:absolute;width:36vw;height:36vw;border-radius:50%;background:var(--yellow);filter:blur(140px);opacity:.14;bottom:-15%;left:-10%}
+.login__card{position:relative;width:100%;max-width:420px;background:var(--surface);border:1px solid var(--line);padding:2rem}
+.login__mark{display:grid;place-items:center;width:56px;height:56px;background:var(--pink);color:var(--black);font-family:var(--font-display);font-size:1.3rem;margin-bottom:1.4rem}
+.login h1{font-family:var(--font-display);font-size:1.6rem;text-transform:uppercase;letter-spacing:-.02em;line-height:1.1}
+.login p{color:var(--muted);font-size:.88rem;margin:.6rem 0 1.8rem}
+.login__field{margin-bottom:.9rem}
+.login__field label{display:block;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.login__field input{width:100%;background:var(--black);border:1px solid var(--line);padding:.85rem 1rem;outline:none;transition:border-color .25s}
+.login__field input:focus{border-color:var(--pink)}
+.login__err{font-family:var(--font-mono);font-size:.72rem;color:var(--red);min-height:1.2rem;margin-bottom:.6rem}
+.login__hint{font-family:var(--font-mono);font-size:.66rem;color:var(--muted);margin-top:1.2rem;text-align:center}
+
+/* ============ SHELL ============ */
+.shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.side{background:var(--black-2);border-right:1px solid var(--line);padding:1.4rem 1rem;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto}
+.side__brand{display:flex;align-items:center;gap:.65rem;padding-bottom:1.4rem;border-bottom:1px solid var(--line);margin-bottom:1.2rem}
+.side__mark{display:grid;place-items:center;width:34px;height:34px;background:linear-gradient(135deg,var(--pink),var(--yellow));color:var(--black);font-family:var(--font-display);font-size:.78rem;flex:none}
+.side__brand b{font-family:var(--font-display);font-size:.92rem;text-transform:uppercase;letter-spacing:-.01em;line-height:1.2;display:block}
+.side__brand small{font-family:var(--font-mono);font-size:.6rem;color:var(--muted)}
+.side__label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:1rem .8rem .5rem}
+.side a{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;font-family:var(--font-mono);font-size:.76rem;color:var(--muted);border-left:2px solid transparent;transition:.25s var(--ease)}
+.side a:hover{color:var(--white);background:var(--surface)}
+.side a.is-active{color:var(--white);border-left-color:var(--pink);background:var(--surface)}
+.side a .dot{width:5px;height:5px;background:currentColor;opacity:.5;flex:none}
+.side a.is-active .dot{background:var(--pink);opacity:1}
+.side__foot{margin-top:auto;padding-top:1.2rem;border-top:1px solid var(--line)}
+.side__user{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem}
+.side__user i{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green)}
+.side__ext{display:block;font-family:var(--font-mono);font-size:.66rem;color:var(--muted);padding:.35rem 0;transition:color .25s}
+.side__ext:hover{color:var(--yellow)}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem var(--pad);border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(8,8,10,.9);backdrop-filter:blur(12px);z-index:50;flex-wrap:wrap}
+.topbar h2{font-family:var(--font-display);font-size:1.15rem;text-transform:uppercase;letter-spacing:-.01em}
+.topbar__meta{font-family:var(--font-mono);font-size:.68rem;color:var(--muted)}
+.view{padding:var(--pad);flex:1}
+.view[hidden]{display:none}
+
+/* ============ BUTTONS ============ */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.62rem 1.05rem;font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--line);cursor:pointer;transition:.3s var(--ease);white-space:nowrap}
+.btn:hover{border-color:var(--pink);color:var(--pink)}
+.btn--pink{background:var(--pink);color:var(--black);border-color:var(--pink)}
+.btn--pink:hover{background:var(--yellow);border-color:var(--yellow);color:var(--black)}
+.btn--yellow{background:var(--yellow);color:var(--black);border-color:var(--yellow)}
+.btn--yellow:hover{background:var(--pink);border-color:var(--pink);color:var(--black)}
+.btn--danger:hover{border-color:var(--red);color:var(--red)}
+.btn--sm{padding:.4rem .7rem;font-size:.64rem}
+.btn--block{width:100%}
+.btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+
+/* ============ CARDS ============ */
+.grid{display:grid;gap:1rem}
+.grid--4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.grid--2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.grid--3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);padding:1.2rem 1.3rem}
+.card__head{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-bottom:1.1rem;padding-bottom:.8rem;border-bottom:1px solid var(--line)}
+.card__head h3{font-family:var(--font-display);font-size:.82rem;text-transform:uppercase;letter-spacing:.01em}
+.card__head span{font-family:var(--font-mono);font-size:.64rem;color:var(--muted)}
+.stat{position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;right:-28px;top:-28px;width:88px;height:88px;border-radius:50%;background:var(--pink);opacity:.1}
+.stat--y::after{background:var(--yellow)}
+.stat__label{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.stat__value{font-family:var(--font-display);font-size:clamp(1.9rem,3.4vw,2.7rem);line-height:1;margin:.55rem 0 .3rem;letter-spacing:-.03em}
+.stat__value small{font-size:.45em;color:var(--muted);font-family:var(--font-body);letter-spacing:0}
+.stat__sub{font-family:var(--font-mono);font-size:.66rem;color:var(--muted)}
+.stat--p .stat__value{color:var(--pink)}
+.stat--y .stat__value{color:var(--yellow)}
+.stat--g .stat__value{color:var(--green)}
+
+/* ============ LIVE ENGINE STRIP ============ */
+.note{color:var(--muted);font-size:.85rem;margin-bottom:1rem;line-height:1.6}
+.note b{color:var(--white)}
+.engine{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem}
+.engine__tile{background:var(--surface-2);border:1px solid var(--line);padding:.85rem .95rem}
+.engine__label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.engine__value{font-family:var(--font-display);font-size:1.5rem;margin-top:.3rem;line-height:1}
+.engine__value small{font-family:var(--font-body);font-size:.5rem;color:var(--muted);letter-spacing:0}
+.engine__tile--p .engine__value{color:var(--pink)}
+.engine__tile--y .engine__value{color:var(--yellow)}
+
+/* ============ TABLE ============ */
+.table-wrap{background:var(--surface);border:1px solid var(--line);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+thead th{position:sticky;top:0;background:var(--surface-2);text-align:left;padding:.8rem .9rem;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:.75rem .9rem;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+td.mono,.mono{font-family:var(--font-mono);font-size:.74rem}
+td.num{text-align:right;font-family:var(--font-mono);font-size:.74rem}
+.td-actions{display:flex;gap:.35rem;justify-content:flex-end}
+.truncate{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.pill{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .55rem;font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid}
+.pill--ok{color:var(--green);border-color:rgba(43,255,136,.4);background:rgba(43,255,136,.08)}
+.pill--bad{color:var(--red);border-color:rgba(255,77,109,.4);background:rgba(255,77,109,.08)}
+.pill--warn{color:var(--yellow);border-color:rgba(232,255,0,.35);background:rgba(232,255,0,.07)}
+.pill--pink{color:var(--pink);border-color:rgba(255,46,136,.4);background:rgba(255,46,136,.08)}
+.pill--muted{color:var(--muted);border-color:var(--line)}
+.grade{display:inline-grid;place-items:center;width:26px;height:26px;font-family:var(--font-display);font-size:.8rem;border:1px solid}
+.grade--A{color:var(--green);border-color:rgba(43,255,136,.5)}
+.grade--B{color:var(--yellow);border-color:rgba(232,255,0,.5)}
+.grade--C{color:#ffb020;border-color:rgba(255,176,32,.5)}
+.grade--D{color:#ff7a45;border-color:rgba(255,122,69,.5)}
+.grade--F{color:var(--red);border-color:rgba(255,77,109,.5)}
+
+.empty{padding:3rem 1rem;text-align:center;color:var(--muted);font-family:var(--font-mono);font-size:.8rem}
+.empty b{display:block;font-family:var(--font-display);color:var(--white);font-size:1.05rem;margin-bottom:.4rem}
+
+/* ============ TOOLBAR ============ */
+.toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.toolbar input,.toolbar select{background:var(--surface);border:1px solid var(--line);padding:.62rem .85rem;font-size:.82rem;outline:none;transition:border-color .25s;min-width:150px}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--pink)}
+.toolbar input{flex:1;min-width:200px}
+.toolbar__spacer{flex:1}
+.count{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+
+/* ============ PAGINATION ============ */
+.pager{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1rem;border-top:1px solid var(--line);flex-wrap:wrap}
+.pager__info{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+.pager__btns{display:flex;gap:.35rem}
+
+/* ============ MODAL ============ */
+.modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:1.2rem}
+.modal.is-open{display:flex}
+.modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+.modal__box{position:relative;background:var(--surface);border:1px solid var(--line);width:100%;max-width:760px;max-height:88vh;overflow-y:auto}
+.modal__head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.modal__head h3{font-family:var(--font-display);font-size:1rem;text-transform:uppercase}
+.modal__body{padding:1.3rem}
+.modal__foot{display:flex;justify-content:flex-end;gap:.6rem;padding:1rem 1.3rem;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--surface)}
+.modal__close{width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--white);cursor:pointer;font-size:1rem;line-height:1;transition:.25s}
+.modal__close:hover{border-color:var(--pink);color:var(--pink)}
+
+/* ============ FORM ============ */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.form__full{grid-column:1/-1}
+.form label{display:block;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.form input,.form select,.form textarea{width:100%;background:var(--black);border:1px solid var(--line);padding:.65rem .8rem;font-size:.86rem;outline:none;transition:border-color .25s}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--pink)}
+.form textarea{resize:vertical;min-height:70px}
+.form input[readonly]{opacity:.55;cursor:not-allowed}
+
+/* ============ DRAWER ============ */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:210;transform:translateX(102%);transition:transform .4s var(--ease);display:flex;flex-direction:column}
+.drawer.is-open{transform:translateX(0)}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--line)}
+.drawer__head h3{font-family:var(--font-display);font-size:1rem;text-transform:uppercase}
+.drawer__body{padding:1.3rem;overflow-y:auto;flex:1}
+.drawer__foot{padding:1rem 1.3rem;border-top:1px solid var(--line);display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:.45rem 1rem;font-size:.85rem}
+.kv dt{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:.15rem}
+.kv dd{overflow-wrap:anywhere}
+.sec{margin-top:1.6rem}
+.sec__title{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);padding-bottom:.55rem;border-bottom:1px solid var(--line);margin-bottom:.8rem}
+pre.json{background:var(--black);border:1px solid var(--line);padding:.85rem;font-family:var(--font-mono);font-size:.7rem;line-height:1.55;overflow-x:auto;max-height:340px;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+pre.json b{color:var(--yellow)}
+pre.json i{color:var(--pink);font-style:normal}
+.vio{border:1px solid var(--line);border-left:2px solid var(--pink);padding:.7rem .85rem;margin-bottom:.55rem;background:var(--black-2)}
+.vio--critical{border-left-color:var(--red)}
+.vio--major{border-left-color:var(--yellow)}
+.vio__top{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;margin-bottom:.25rem}
+.vio__name{font-family:var(--font-display);font-size:.72rem;text-transform:uppercase}
+.vio__pen{font-family:var(--font-mono);font-size:.68rem;color:var(--red)}
+.vio__detail{font-size:.78rem;color:var(--muted)}
+.rec{font-size:.8rem;padding:.55rem .7rem;border:1px solid var(--line);margin-bottom:.4rem;color:var(--muted);border-left:2px solid var(--yellow)}
+
+/* ============ TOAST ============ */
+.toasts{position:fixed;bottom:1.2rem;right:1.2rem;z-index:400;display:flex;flex-direction:column;gap:.5rem;max-width:min(340px,90vw)}
+.toast{padding:.75rem 1rem;font-family:var(--font-mono);font-size:.74rem;border:1px solid var(--line);background:var(--surface);border-left:3px solid var(--pink);animation:slide .35s var(--ease)}
+.toast--ok{border-left-color:var(--green)}
+.toast--err{border-left-color:var(--red)}
+@keyframes slide{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+
+/* ============ MISC ============ */
+.mono-box{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);background:var(--black);border:1px solid var(--line);padding:.85rem;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.backup-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.progress{height:4px;background:var(--surface-2);overflow:hidden;margin-top:.5rem}
+.progress span{display:block;height:100%;background:var(--pink);width:0;transition:width .9s var(--ease)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+  .side nav{display:flex;overflow-x:auto;gap:.3rem}
+  .side__label,.side__foot{display:none}
+  .side a{border-left:none;border-bottom:2px solid transparent;white-space:nowrap}
+  .side a.is-active{border-left:none;border-bottom-color:var(--pink)}
+  .form{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <div class="login__mark">CA</div>
+    <h1>Admin Control Panel</h1>
+    <p>ComplianceAI database management — scans, product catalog and legal rules.</p>
+    <form id="loginForm">
+      <div class="login__field">
+        <label for="username">Username</label>
+        <input type="text" id="username" value="admin" autocomplete="username" required>
+      </div>
+      <div class="login__field">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <div class="login__err" id="loginError"></div>
+      <button class="btn btn--yellow btn--block" type="submit">Sign in</button>
+    </form>
+    <div class="login__hint">{% if default_password_hint %}Default password: admin123 &nbsp;·&nbsp; override with ADMIN_PASSWORD env var{% else %}Password is managed by the server operator{% endif %}</div>
+  </div>
+</div>
+
+<div class="shell" id="shell" hidden>
+  <aside class="side">
+    <div class="side__brand">
+      <span class="side__mark">CA</span>
+      <div>
+        <b>ComplianceAI</b>
+        <small>Admin Control Panel</small>
+      </div>
+    </div>
+    <nav id="sideNav">
+      <div class="side__label">Monitor</div>
+      <a href="#overview" data-view="overview" class="is-active"><span class="dot"></span>Overview</a>
+      <a href="#scans" data-view="scans"><span class="dot"></span>Scans</a>
+      <div class="side__label">Manage</div>
+      <a href="#catalog" data-view="catalog"><span class="dot"></span>Product Catalog</a>
+      <a href="#rules" data-view="rules"><span class="dot"></span>Legal Rules</a>
+      <div class="side__label">System</div>
+      <a href="#backup" data-view="backup"><span class="dot"></span>Backup &amp; Export</a>
+    </nav>
+    <div class="side__foot">
+      <div class="side__user"><i></i> <span id="whoLabel">admin</span></div>
+      <a class="side__ext" href="{{ scanner_url }}" target="_blank" rel="noopener">↗ Open scanner</a>
+      <a class="side__ext" href="{{ portfolio_url }}" target="_blank" rel="noopener">↗ Open portfolio</a>
+      <button class="btn btn--block btn--sm btn--danger" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <h2 id="viewTitle">Overview</h2>
+      <div class="topbar__meta" id="topMeta">—</div>
+    </header>
+
+    <!-- OVERVIEW -->
+    <section class="view" id="view-overview">
+      <div class="grid grid--4" id="statGrid"></div>
+      <div class="card" style="margin-top:1rem">
+        <div class="card__head"><h3>Live Engine</h3><span id="engineMeta">—</span></div>
+        <p class="note">
+          Rule and catalog edits are written to the same database the scanner reads,
+          so they apply to the <b>next scan</b> — no restart, no redeploy.
+        </p>
+        <div class="engine" id="engineGrid"></div>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <div class="card__head"><h3>Recent Scans</h3><span><a href="#scans" class="mono" style="color:var(--pink)">view all →</a></span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Scan ID</th><th>Product</th><th>Category</th><th>Score</th><th>Grade</th><th>Status</th><th>When</th></tr></thead>
+            <tbody id="recentBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCANS -->
+    <section class="view" id="view-scans" hidden>
+      <div class="toolbar">
+        <input type="search" id="scanSearch" placeholder="Search product, scan id or category…">
+        <select id="scanStatus">
+          <option value="">All status</option>
+          <option value="compliant">Compliant</option>
+          <option value="violation">Violation</option>
+        </select>
+        <select id="scanGrade"><option value="">All grades</option></select>
+        <select id="scanCategory"><option value="">All categories</option></select>
+        <div class="toolbar__spacer"></div>
+        <a class="btn btn--sm" href="/api/admin/export/scans.csv">Export CSV</a>
+        <button class="btn btn--sm btn--danger" id="clearScansBtn">Clear all</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Scan ID</th><th>Product</th><th>Category</th><th>Score</th><th>Grade</th><th>Violations</th><th>Penalty</th><th>Status</th><th></th></tr></thead>
+          <tbody id="scansBody"></tbody>
+        </table>
+        <div class="pager">
+          <span class="pager__info" id="scanPagerInfo"></span>
+          <div class="pager__btns">
+            <button class="btn btn--sm" id="scanPrev">Prev</button>
+            <button class="btn btn--sm" id="scanNext">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATALOG -->
+    <section class="view" id="view-catalog" hidden>
+      <div class="toolbar">
+        <input type="search" id="prodSearch" placeholder="Search name, brand, barcode or FSSAI…">
+        <select id="prodCategory"><option value="">All categories</option></select>
+        <div class="toolbar__spacer"></div>
+        <span class="count" id="prodCount"></span>
+        <a class="btn btn--sm" href="/api/admin/export/product_catalog.csv">Export CSV</a>
+        <button class="btn btn--sm btn--yellow" id="addProductBtn">Add product</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Barcode</th><th>Brand</th><th>Product</th><th>Category</th><th>MRP</th><th>Qty</th><th>FSSAI</th><th>Veg</th><th></th></tr></thead>
+          <tbody id="prodBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RULES -->
+    <section class="view" id="view-rules" hidden>
+      <div class="toolbar">
+        <div class="toolbar__spacer"></div>
+        <span class="count" id="ruleCount"></span>
+        <a class="btn btn--sm" href="/api/admin/export/legal_rules.csv">Export CSV</a>
+        <button class="btn btn--sm btn--yellow" id="addRuleBtn">Add rule</button>
+      </div>
+      <p class="note">
+        These rows <b>are</b> the registry the scoring engine reads on every scan.
+        Change a name, weight, severity or penalty band and it is live on the
+        <a href="{{ scanner_url }}" target="_blank" rel="noopener" style="color:var(--pink)">scanner</a>
+        immediately. Turn a rule off to drop it from scoring entirely.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rule Key</th><th>Rule Name</th><th>Act / Section</th><th>Severity</th><th>Food pts</th><th>Non-food pts</th><th>First Penalty</th><th>Repeat Penalty</th><th>Status</th><th></th></tr></thead>
+          <tbody id="ruleBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BACKUP -->
+    <section class="view" id="view-backup" hidden>
+      <div class="grid grid--2">
+        <div class="card">
+          <div class="card__head"><h3>Database Status</h3><span id="dbSize"></span></div>
+          <dl class="kv" id="dbInfo"></dl>
+        </div>
+        <div class="card">
+          <div class="card__head"><h3>Backup &amp; Restore</h3><span></span></div>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Download a full snapshot of <span class="mono">compliance.db</span> as a zip, or upload one to restore.</p>
+          <div class="backup-row">
+            <a class="btn btn--yellow" href="/api/admin/backup">Download backup</a>
+            <label class="btn" for="restoreFile" style="cursor:pointer">Restore from file…</label>
+            <input type="file" id="restoreFile" accept=".zip,.db" hidden>
+            <button class="btn" id="vacuumBtn">Compact DB</button>
+          </div>
+          <div id="restoreStatus" style="margin-top:1rem"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__box">
+    <div class="modal__head"><h3 id="productModalTitle">Edit product</h3><button class="modal__close" data-close>&times;</button></div>
+    <div class="modal__body">
+      <form class="form" id="productForm">
+        <input type="hidden" id="p_id">
+        <div><label for="p_barcode">Barcode</label><input id="p_barcode" name="barcode"></div>
+        <div><label for="p_brand">Brand</label><input id="p_brand" name="brand"></div>
+        <div class="form__full"><label for="p_product_name">Product name</label><input id="p_product_name" name="product_name" required></div>
+        <div><label for="p_category">Category</label><input id="p_category" name="category"></div>
+        <div><label for="p_standard_mrp">Standard MRP</label><input id="p_standard_mrp" name="standard_mrp" type="number" step="0.01"></div>
+        <div><label for="p_standard_quantity">Standard quantity</label><input id="p_standard_quantity" name="standard_quantity"></div>
+        <div><label for="p_unit_sale_price">Unit sale price</label><input id="p_unit_sale_price" name="unit_sale_price"></div>
+        <div><label for="p_fssai_no">FSSAI no.</label><input id="p_fssai_no" name="fssai_no"></div>
+        <div><label for="p_shelf_life_months">Shelf life (months)</label><input id="p_shelf_life_months" name="shelf_life_months" type="number"></div>
+        <div class="form__full"><label for="p_manufacturer_name">Manufacturer</label><input id="p_manufacturer_name" name="manufacturer_name"></div>
+        <div class="form__full"><label for="p_manufacturer_address">Manufacturer address</label><textarea id="p_manufacturer_address" name="manufacturer_address"></textarea></div>
+        <div><label for="p_country_of_origin">Country of origin</label><input id="p_country_of_origin" name="country_of_origin"></div>
+        <div><label for="p_is_veg">Veg</label><select id="p_is_veg" name="is_veg"><option value="1">Vegetarian</option><option value="0">Non-vegetarian</option></select></div>
+      </form>
+    </div>
+    <div class="modal__foot">
+      <button class="btn" data-close>Cancel</button>
+      <button class="btn btn--yellow" id="saveProductBtn">Save product</button>
+    </div>
+  </div>
+</div>
+
+<!-- RULE MODAL -->
+<div class="modal" id="ruleModal">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__box">
+    <div class="modal__head"><h3 id="ruleModalTitle">Edit rule</h3><button class="modal__close" data-close>&times;</button></div>
+    <div class="modal__body">
+      <form class="form" id="ruleForm">
+        <div><label for="r_rule_key">Rule key</label><input id="r_rule_key" name="rule_key" required></div>
+        <div><label for="r_severity">Severity</label><select id="r_severity" name="severity"><option>CRITICAL</option><option>MAJOR</option><option>MINOR</option><option>INFO</option></select></div>
+        <div class="form__full"><label for="r_rule_name">Rule name</label><input id="r_rule_name" name="rule_name"></div>
+        <div class="form__full"><label for="r_act_section">Act / Section</label><input id="r_act_section" name="act_section"></div>
+        <div class="form__full"><label for="r_description">Description</label><textarea id="r_description" name="description"></textarea></div>
+        <div><label for="r_default_weight">Food weight (pts)</label><input id="r_default_weight" name="default_weight" type="number" min="0"></div>
+        <div><label for="r_weight_non_food">Non-food weight (pts)</label><input id="r_weight_non_food" name="weight_non_food" type="number" min="0"></div>
+        <div><label for="r_penalty_first_offence">First offence penalty</label><input id="r_penalty_first_offence" name="penalty_first_offence" type="number" min="0"></div>
+        <div><label for="r_penalty_subsequent_offence">Subsequent offence penalty</label><input id="r_penalty_subsequent_offence" name="penalty_subsequent_offence" type="number" min="0"></div>
+        <div class="form__full"><label for="r_enabled">Scoring</label><select id="r_enabled" name="enabled"><option value="1">Enabled — counted in the score</option><option value="0">Disabled — skipped by the engine</option></select></div>
+      </form>
+    </div>
+    <div class="modal__foot">
+      <button class="btn" data-close>Cancel</button>
+      <button class="btn btn--yellow" id="saveRuleBtn">Save rule</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCAN DRAWER -->
+<aside class="drawer" id="scanDrawer">
+  <div class="drawer__head">
+    <h3>Scan detail</h3>
+    <button class="modal__close" id="closeDrawer">&times;</button>
+  </div>
+  <div class="drawer__body" id="drawerBody"></div>
+  <div class="drawer__foot">
+    <a class="btn btn--sm" id="drawerPdf" href="#" target="_blank" rel="noopener">Download certificate</a>
+    <button class="btn btn--sm btn--danger" id="drawerDelete">Delete scan</button>
+    <button class="btn btn--sm" id="drawerClose">Close</button>
+  </div>
+</aside>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const api = (path, opts = {}) => fetch('/api/admin' + path, {
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  }).then(async (r) => {
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    return data;
+  });
+
+  const state = { scanPage: 1, scanPages: 1, scanTotal: 0, currentScan: null, editingProduct: null, editingRule: null };
+
+  /* ---------- TOASTS ---------- */
+  function toast(msg, type = '') {
+    const el = document.createElement('div');
+    el.className = 'toast' + (type ? ' toast--' + type : '');
+    el.textContent = msg;
+    $('#toasts').appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; }, 3200);
+    setTimeout(() => el.remove(), 3600);
+  }
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
+  const gradeClass = (g) => 'grade--' + String(g || 'F').toUpperCase().charAt(0);
+
+  /* ---------- AUTH ---------- */
+  async function checkSession() {
+    try {
+      const r = await fetch('/api/admin/session', { credentials: 'same-origin' }).then((x) => x.json());
+      if (r.authenticated) enterApp(r.user);
+      else showLogin();
+    } catch { showLogin(); }
+  }
+  function showLogin() { $('#loginScreen').hidden = false; $('#shell').hidden = true; }
+  function enterApp(user) {
+    $('#loginScreen').hidden = true; $('#shell').hidden = false;
+    $('#whoLabel').textContent = user || 'admin';
+    loadOverview();
+  }
+
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('#loginError').textContent = '';
+    try {
+      const r = await api('/login', { method: 'POST', body: JSON.stringify({ username: $('#username').value, password: $('#password').value }) });
+      enterApp(r.user);
+      toast('Signed in', 'ok');
+    } catch (err) { $('#loginError').textContent = err.message; }
+  });
+
+  $('#logoutBtn').addEventListener('click', async () => {
+    await api('/logout', { method: 'POST' }).catch(() => {});
+    location.reload();
+  });
+
+  /* ---------- NAV ---------- */
+  const TITLES = { overview: 'Overview', scans: 'Scan History', catalog: 'Product Catalog', rules: 'Legal Rules', backup: 'Backup & Export' };
+  function showView(name) {
+    $$('.view').forEach((v) => (v.hidden = v.id !== 'view-' + name));
+    $$('#sideNav a').forEach((a) => a.classList.toggle('is-active', a.dataset.view === name));
+    $('#viewTitle').textContent = TITLES[name] || name;
+    location.hash = name;
+    if (name === 'scans') loadScans();
+    if (name === 'catalog') loadProducts();
+    if (name === 'rules') loadRules();
+    if (name === 'backup') loadDbInfo();
+  }
+  $('#sideNav').addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-view]');
+    if (a) { e.preventDefault(); showView(a.dataset.view); }
+  });
+  window.addEventListener('hashchange', () => {
+    const v = location.hash.replace('#', '');
+    if (TITLES[v]) showView(v);
+  });
+
+  /* ---------- OVERVIEW ---------- */
+  async function loadOverview() {
+    try {
+      const d = await api('/overview');
+      $('#topMeta').textContent = 'DB ' + (d.db.size_bytes / 1024).toFixed(1) + ' KB · integrity ' + d.db.integrity;
+
+      const s = d.scans;
+      const stats = [
+        { label: 'Total scans', value: s.total, sub: s.total ? 'lifetime pipeline runs' : 'no scans yet', cls: '' },
+        { label: 'Compliance rate', value: s.compliance_rate + '%', sub: s.compliant + ' pass / ' + s.failed + ' fail', cls: 'stat--g' },
+        { label: 'Avg compliance score', value: s.avg_score, sub: 'out of 100 weighted', cls: 'stat--y' },
+        { label: 'Flagged penalty', value: money(s.penalty_min) + ' – ' + money(s.penalty_max), sub: s.total_violations + ' violations raised', cls: 'stat--p' },
+        { label: 'Catalog products', value: d.catalog.products, sub: d.catalog.brands + ' brands · ' + d.catalog.categories + ' categories', cls: '' },
+        { label: 'Legal rules', value: d.rules.total, sub: d.rules.by_severity.map((x) => x.severity + ':' + x.count).join(' · '), cls: '' },
+      ];
+      $('#statGrid').innerHTML = stats.map((x) => `
+        <div class="card stat ${x.cls}">
+          <div class="stat__label">${esc(x.label)}</div>
+          <div class="stat__value">${esc(x.value)}</div>
+          <div class="stat__sub">${esc(x.sub)}</div>
+        </div>`).join('');
+
+      const eng = d.engine || {};
+      $('#engineMeta').textContent = eng.active != null ? eng.active + ' active of ' + eng.total + ' registered' : '—';
+      const tiles = [
+        { label: 'Active rules', value: eng.active ?? '—', sub: (eng.disabled || 0) + ' disabled', cls: '' },
+        { label: 'Severity mix', value: `${eng.critical || 0}/${eng.major || 0}/${eng.minor || 0}`, sub: 'critical / major / minor', cls: 'engine__tile--p' },
+        { label: 'Food weight total', value: eng.food_weight_total ?? '—', sub: 'points across food rules', cls: 'engine__tile--y' },
+        { label: 'Non-food weight total', value: eng.non_food_weight_total ?? '—', sub: 'points across non-food rules', cls: 'engine__tile--y' },
+      ];
+      $('#engineGrid').innerHTML = tiles.map((x) => `
+        <div class="engine__tile ${x.cls}">
+          <div class="engine__label">${esc(x.label)}</div>
+          <div class="engine__value">${esc(x.value)}</div>
+          <div class="engine__label" style="margin-top:.35rem">${esc(x.sub)}</div>
+        </div>`).join('');
+
+      $('#recentBody').innerHTML = d.recent.length ? d.recent.map((r) => `
+        <tr>
+          <td class="mono">${esc(r.scan_id)}</td>
+          <td class="truncate">${esc(r.product_name)}</td>
+          <td class="mono">${esc(r.category)}</td>
+          <td class="num">${r.score}</td>
+          <td><span class="grade ${gradeClass(r.grade)}">${esc(r.grade)}</span></td>
+          <td>${r.is_compliant ? '<span class="pill pill--ok">Pass</span>' : '<span class="pill pill--bad">Violation</span>'}</td>
+          <td class="mono">${esc(r.timestamp)}</td>
+        </tr>`).join('') : `<tr><td colspan="7">${emptyRow('No scans yet', 'Run a product scan to populate this table')}</td></tr>`;
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  function emptyRow(title, sub) { return `<div class="empty"><b>${esc(title)}</b>${esc(sub)}</div>`; }
+
+  /* ---------- SCANS ---------- */
+  async function loadScans() {
+    const q = new URLSearchParams({
+      page: state.scanPage, per_page: 25,
+      search: $('#scanSearch').value, status: $('#scanStatus').value,
+      grade: $('#scanGrade').value, category: $('#scanCategory').value,
+    });
+    try {
+      const d = await api('/scans?' + q);
+      state.scanPages = d.pages; state.scanTotal = d.total;
+      $('#scansBody').innerHTML = d.scans.length ? d.scans.map((r) => `
+        <tr>
+          <td class="mono">${esc(r.scan_id)}</td>
+          <td class="truncate">${esc(r.product_name)}</td>
+          <td class="mono">${esc(r.category)}</td>
+          <td class="num">${r.score}</td>
+          <td><span class="grade ${gradeClass(r.grade)}">${esc(r.grade)}</span></td>
+          <td class="num">${r.violation_count}</td>
+          <td class="mono">${esc(r.total_penalty || '—')}</td>
+          <td>${r.is_compliant ? '<span class="pill pill--ok">Pass</span>' : '<span class="pill pill--bad">Violation</span>'}</td>
+          <td class="td-actions"><button class="btn btn--sm" data-open-scan="${r.id}">View</button></td>
+        </tr>`).join('') : `<tr><td colspan="9">${emptyRow('No matching scans', 'Adjust the filters or run a new scan')}</td></tr>`;
+
+      const from = d.total ? (d.page - 1) * d.per_page + 1 : 0;
+      const to = Math.min(d.page * d.per_page, d.total);
+      $('#scanPagerInfo').textContent = `Showing ${from}–${to} of ${d.total} scans`;
+      $('#scanPrev').disabled = d.page <= 1;
+      $('#scanNext').disabled = d.page >= d.pages;
+      $('#scanPrev').style.opacity = d.page <= 1 ? '.4' : '1';
+      $('#scanNext').style.opacity = d.page >= d.pages ? '.4' : '1';
+
+      if (!$('#scanGrade').options.length) {
+        const grades = ['A', 'B', 'C', 'D', 'F'];
+        $('#scanGrade').innerHTML = '<option value="">All grades</option>' + grades.map((g) => `<option>${g}</option>`).join('');
+      }
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  let scanTimer;
+  $('#scanSearch').addEventListener('input', () => { clearTimeout(scanTimer); scanTimer = setTimeout(() => { state.scanPage = 1; loadScans(); }, 300); });
+  ['scanStatus', 'scanGrade', 'scanCategory'].forEach((id) => $('#' + id).addEventListener('change', () => { state.scanPage = 1; loadScans(); }));
+  $('#scanPrev').addEventListener('click', () => { if (state.scanPage > 1) { state.scanPage--; loadScans(); } });
+  $('#scanNext').addEventListener('click', () => { if (state.scanPage < state.scanPages) { state.scanPage++; loadScans(); } });
+
+  $('#scansBody').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-open-scan]');
+    if (b) openScan(b.dataset.openScan);
+  });
+
+  $('#clearScansBtn').addEventListener('click', async () => {
+    if (!confirm('Delete ALL scan records? This cannot be undone.')) return;
+    try {
+      const r = await api('/scans', { method: 'DELETE' });
+      toast(`Cleared ${r.deleted} scans`, 'ok');
+      loadScans();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+
+  /* ---------- SCAN DRAWER ---------- */
+  async function openScan(id) {
+    try {
+      const d = await api('/scans/' + id);
+      state.currentScan = d;
+      $('#drawerPdf').href = '/api/export-pdf/' + encodeURIComponent(d.scan_id);
+
+      const summary = d.summary || {};
+      const fraud = d.fraud_analysis || {};
+      const barcode = d.barcode_data || {};
+
+      let html = `
+        <dl class="kv">
+          <dt>Scan ID</dt><dd class="mono">${esc(d.scan_id)}</dd>
+          <dt>Timestamp</dt><dd class="mono">${esc(d.timestamp)}</dd>
+          <dt>Product</dt><dd>${esc(d.product_name)}</dd>
+          <dt>Category</dt><dd>${esc(d.category)}</dd>
+          <dt>Score</dt><dd><b style="color:${d.is_compliant ? 'var(--green)' : 'var(--pink)'}">${esc(d.score)}/100</b> · grade ${esc(d.grade)}</dd>
+          <dt>Status</dt><dd>${d.is_compliant ? '<span class="pill pill--ok">Compliant</span>' : '<span class="pill pill--bad">Non-compliant</span>'}</dd>
+          <dt>Violations</dt><dd>${esc(d.violation_count)}</dd>
+          <dt>Penalty</dt><dd style="color:var(--red)">${esc(d.total_penalty || '—')}</dd>
+          <dt>Image</dt><dd class="mono">${esc(d.image_name || '—')}</dd>
+        </dl>`;
+
+      if ((d.violations || []).length) {
+        html += `<div class="sec"><div class="sec__title">Violations (${d.violations.length})</div>` +
+          d.violations.map((v) => {
+            const sev = String(v.severity || '').toLowerCase();
+            const detail = typeof v.details === 'object' ? (v.details.error || JSON.stringify(v.details)) : v.details;
+            return `<div class="vio vio--${esc(sev)}">
+              <div class="vio__top"><span class="vio__name">${esc(v.rule_name || v.rule)}</span><span class="vio__pen">${esc(v.penalty_range || '')}</span></div>
+              <div class="vio__detail">${esc(v.act_section || '')} · weight lost ${esc(v.weight_lost)} · ${esc(detail || '')}</div>
+            </div>`;
+          }).join('') + '</div>';
+      }
+
+      if ((d.rule_checks || []).length) {
+        html += `<div class="sec"><div class="sec__title">Rule Checklist (${d.rule_checks.length})</div>` +
+          d.rule_checks.map((c) => `<div class="vio" style="border-left-color:${c.passed ? 'var(--green)' : 'var(--red)'}">
+            <div class="vio__top"><span class="vio__name">${c.passed ? 'PASS' : 'FAIL'} · ${esc(c.rule_name || c.rule)}</span><span class="vio__pen" style="color:${c.passed ? 'var(--green)' : 'var(--red)'}">${esc(c.act_section || '')}</span></div>
+          </div>`).join('') + '</div>';
+      }
+
+      if ((d.recommendations || []).length) {
+        html += `<div class="sec"><div class="sec__title">Recommendations</div>` +
+          d.recommendations.map((r) => `<div class="rec">${esc(r)}</div>`).join('') + '</div>';
+      }
+
+      if (Object.keys(fraud).length) {
+        html += `<div class="sec"><div class="sec__title">Fraud Analysis</div>` +
+          Object.entries(fraud).map(([k, v]) => `<div class="vio" style="border-left-color:var(--yellow)">
+            <div class="vio__top"><span class="vio__name">${esc(k.replace(/_/g, ' '))}</span></div>
+            <div class="vio__detail">${esc(typeof v === 'object' ? JSON.stringify(v) : v)}</div>
+          </div>`).join('') + '</div>';
+      }
+
+      if (Object.keys(barcode).length) {
+        html += `<div class="sec"><div class="sec__title">Barcode Data</div><pre class="json">${esc(JSON.stringify(barcode, null, 2))}</pre></div>`;
+      }
+      if (d.extracted_data) {
+        html += `<div class="sec"><div class="sec__title">OCR Extraction (${d.extracted_data.length} tokens)</div>
+          <pre class="json">${esc(JSON.stringify(d.extracted_data.slice(0, 60), null, 2))}</pre></div>`;
+      }
+      if (d.summary) {
+        html += `<div class="sec"><div class="sec__title">Raw Summary</div><pre class="json">${esc(JSON.stringify(summary, null, 2))}</pre></div>`;
+      }
+
+      $('#drawerBody').innerHTML = html;
+      $('#scanDrawer').classList.add('is-open');
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  const closeDrawer = () => { $('#scanDrawer').classList.remove('is-open'); state.currentScan = null; };
+  $('#closeDrawer').addEventListener('click', closeDrawer);
+  $('#drawerClose').addEventListener('click', closeDrawer);
+  $('#drawerDelete').addEventListener('click', async () => {
+    if (!state.currentScan) return;
+    if (!confirm(`Delete scan ${state.currentScan.scan_id}?`)) return;
+    try {
+      await api('/scans/' + state.currentScan.id, { method: 'DELETE' });
+      toast('Scan deleted', 'ok');
+      closeDrawer();
+      loadScans();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+
+  /* ---------- PRODUCTS ---------- */
+  async function loadProducts() {
+    try {
+      const d = await api('/products?search=' + encodeURIComponent($('#prodSearch').value) + '&category=' + encodeURIComponent($('#prodCategory').value));
+      $('#prodCount').textContent = d.count + ' products';
+      const cur = $('#prodCategory').value;
+      $('#prodCategory').innerHTML = '<option value="">All categories</option>' + d.categories.map((c) => `<option${c.category === cur ? ' selected' : ''}>${esc(c.category)}</option>`).join('');
+
+      $('#prodBody').innerHTML = d.products.length ? d.products.map((p) => `
+        <tr>
+          <td class="mono">${p.id}</td>
+          <td class="mono">${esc(p.barcode)}</td>
+          <td>${esc(p.brand)}</td>
+          <td class="truncate">${esc(p.product_name)}</td>
+          <td class="mono">${esc(p.category)}</td>
+          <td class="num">${p.standard_mrp != null ? '₹' + p.standard_mrp : '—'}</td>
+          <td class="mono">${esc(p.standard_quantity || '—')}</td>
+          <td class="mono">${esc(p.fssai_no || '—')}</td>
+          <td>${p.is_veg ? '<span class="pill pill--ok">Veg</span>' : '<span class="pill pill--muted">Non-veg</span>'}</td>
+          <td class="td-actions">
+            <button class="btn btn--sm" data-edit-product="${p.id}">Edit</button>
+            <button class="btn btn--sm btn--danger" data-del-product="${p.id}">Del</button>
+          </td>
+        </tr>`).join('') : `<tr><td colspan="10">${emptyRow('No products found', 'Try a different search or add a product')}</td></tr>`;
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  let prodTimer;
+  $('#prodSearch').addEventListener('input', () => { clearTimeout(prodTimer); prodTimer = setTimeout(loadProducts, 300); });
+  $('#prodCategory').addEventListener('change', loadProducts);
+
+  $('#prodBody').addEventListener('click', async (e) => {
+    const edit = e.target.closest('[data-edit-product]');
+    const del = e.target.closest('[data-del-product]');
+    if (edit) {
+      const d = await api('/products');
+      const p = d.products.find((x) => String(x.id) === edit.dataset.editProduct);
+      if (p) openProductModal(p);
+    }
+    if (del) {
+      if (!confirm('Delete this product from the catalog?')) return;
+      try {
+        await api('/products/' + del.dataset.delProduct, { method: 'DELETE' });
+        toast('Product deleted', 'ok');
+        loadProducts();
+      } catch (err) { toast(err.message, 'err'); }
+    }
+  });
+
+  function openProductModal(p) {
+    state.editingProduct = p || null;
+    $('#productModalTitle').textContent = p ? 'Edit product #' + p.id : 'Add product';
+    $('#p_id').value = p ? p.id : '';
+    ['barcode', 'brand', 'product_name', 'category', 'standard_quantity', 'unit_sale_price', 'fssai_no', 'manufacturer_name', 'manufacturer_address', 'country_of_origin'].forEach((k) => ($('#p_' + k).value = p ? (p[k] ?? '') : ''));
+    $('#p_standard_mrp').value = p && p.standard_mrp != null ? p.standard_mrp : '';
+    $('#p_shelf_life_months').value = p && p.shelf_life_months != null ? p.shelf_life_months : '';
+    $('#p_is_veg').value = p ? (p.is_veg ? '1' : '0') : '1';
+    if (!p) { $('#p_country_of_origin').value = 'India'; }
+    $('#productModal').classList.add('is-open');
+  }
+  $('#addProductBtn').addEventListener('click', () => openProductModal(null));
+
+  $('#saveProductBtn').addEventListener('click', async () => {
+    const body = {
+      barcode: $('#p_barcode').value.trim(), brand: $('#p_brand').value.trim(),
+      product_name: $('#p_product_name').value.trim(), category: $('#p_category').value.trim(),
+      standard_mrp: $('#p_standard_mrp').value === '' ? null : Number($('#p_standard_mrp').value),
+      standard_quantity: $('#p_standard_quantity').value.trim(), unit_sale_price: $('#p_unit_sale_price').value.trim(),
+      fssai_no: $('#p_fssai_no').value.trim(), manufacturer_name: $('#p_manufacturer_name').value.trim(),
+      manufacturer_address: $('#p_manufacturer_address').value.trim(), country_of_origin: $('#p_country_of_origin').value.trim(),
+      shelf_life_months: $('#p_shelf_life_months').value === '' ? null : Number($('#p_shelf_life_months').value),
+      is_veg: $('#p_is_veg').value === '1' ? 1 : 0,
+    };
+    if (!body.product_name) { toast('Product name is required', 'err'); return; }
+    try {
+      if (state.editingProduct) {
+        await api('/products/' + state.editingProduct.id, { method: 'PUT', body: JSON.stringify(body) });
+        toast('Product updated', 'ok');
+      } else {
+        await api('/products', { method: 'POST', body: JSON.stringify(body) });
+        toast('Product added', 'ok');
+      }
+      $('#productModal').classList.remove('is-open');
+      loadProducts();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+
+  /* ---------- RULES ---------- */
+  async function loadRules() {
+    try {
+      const d = await api('/rules');
+      const reg = await api('/rules/registry').catch(() => ({ rules: [] }));
+      const impl = {};
+      (reg.rules || []).forEach((r) => { impl[r.rule_key] = r.implemented; });
+      $('#ruleCount').textContent = d.count + ' rules';
+      $('#ruleBody').innerHTML = d.rules.length ? d.rules.map((r) => {
+        const on = r.enabled === 1 || r.enabled === true || r.enabled === '1';
+        const checked = impl[r.rule_key] !== false;
+        return `
+        <tr${on ? '' : ' style="opacity:.5"'}>
+          <td class="mono">${esc(r.rule_key)}</td>
+          <td class="truncate">${esc(r.rule_name)}</td>
+          <td class="mono truncate">${esc(r.act_section)}</td>
+          <td><span class="pill ${r.severity === 'CRITICAL' ? 'pill--bad' : r.severity === 'MAJOR' ? 'pill--warn' : 'pill--muted'}">${esc(r.severity)}</span></td>
+          <td class="num">${esc(r.default_weight)}</td>
+          <td class="num">${esc(r.weight_non_food ?? 0)}</td>
+          <td class="num">${money(r.penalty_first_offence)}</td>
+          <td class="num">${money(r.penalty_subsequent_offence)}</td>
+          <td>${on ? (checked ? '<span class="pill pill--ok">Live</span>' : '<span class="pill pill--warn">Manual</span>') : '<span class="pill pill--muted">Off</span>'}</td>
+          <td class="td-actions">
+            <button class="btn btn--sm" data-edit-rule="${esc(r.rule_key)}">Edit</button>
+            <button class="btn btn--sm btn--danger" data-del-rule="${esc(r.rule_key)}">Del</button>
+          </td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="10">${emptyRow('No rules defined', 'Add a legal metrology rule to begin')}</td></tr>`;
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  $('#ruleBody').addEventListener('click', async (e) => {
+    const edit = e.target.closest('[data-edit-rule]');
+    const del = e.target.closest('[data-del-rule]');
+    if (edit) {
+      const d = await api('/rules');
+      const r = d.rules.find((x) => x.rule_key === edit.dataset.editRule);
+      if (r) openRuleModal(r);
+    }
+    if (del) {
+      if (!confirm(`Delete rule "${del.dataset.delRule}"?`)) return;
+      try {
+        await api('/rules/' + encodeURIComponent(del.dataset.delRule), { method: 'DELETE' });
+        toast('Rule deleted', 'ok');
+        loadRules();
+      } catch (err) { toast(err.message, 'err'); }
+    }
+  });
+
+  function openRuleModal(r) {
+    state.editingRule = r || null;
+    $('#ruleModalTitle').textContent = r ? 'Edit rule' : 'Add rule';
+    $('#r_rule_key').value = r ? r.rule_key : '';
+    $('#r_rule_key').readOnly = !!r;
+    ['rule_name', 'act_section', 'description'].forEach((k) => ($('#r_' + k).value = r ? (r[k] ?? '') : ''));
+    $('#r_severity').value = r ? r.severity : 'MAJOR';
+    $('#r_default_weight').value = r ? r.default_weight : '';
+    $('#r_weight_non_food').value = r ? (r.weight_non_food ?? 0) : '';
+    $('#r_penalty_first_offence').value = r ? r.penalty_first_offence : '';
+    $('#r_penalty_subsequent_offence').value = r ? r.penalty_subsequent_offence : '';
+    $('#r_enabled').value = r ? (String(r.enabled) === '1' || r.enabled === true ? '1' : '0') : '1';
+    $('#ruleModal').classList.add('is-open');
+  }
+  $('#addRuleBtn').addEventListener('click', () => openRuleModal(null));
+
+  $('#saveRuleBtn').addEventListener('click', async () => {
+    const body = {
+      rule_key: $('#r_rule_key').value.trim(), rule_name: $('#r_rule_name').value.trim(),
+      act_section: $('#r_act_section').value.trim(), description: $('#r_description').value.trim(),
+      severity: $('#r_severity').value,
+      default_weight: Number($('#r_default_weight').value || 0),
+      weight_non_food: Number($('#r_weight_non_food').value || 0),
+      penalty_first_offence: Number($('#r_penalty_first_offence').value || 0),
+      penalty_subsequent_offence: Number($('#r_penalty_subsequent_offence').value || 0),
+      enabled: $('#r_enabled').value === '1' ? 1 : 0,
+    };
+    if (!body.rule_key) { toast('Rule key is required', 'err'); return; }
+    try {
+      if (state.editingRule) {
+        await api('/rules/' + encodeURIComponent(state.editingRule.rule_key), { method: 'PUT', body: JSON.stringify(body) });
+        toast('Rule updated — live on the next scan', 'ok');
+      } else {
+        await api('/rules', { method: 'POST', body: JSON.stringify(body) });
+        toast('Rule added — live on the next scan', 'ok');
+      }
+      $('#ruleModal').classList.remove('is-open');
+      loadRules();
+      loadOverview();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+
+  /* ---------- BACKUP ---------- */
+  async function loadDbInfo() {
+    try {
+      const d = await api('/overview');
+      $('#dbSize').textContent = (d.db.size_bytes / 1024).toFixed(1) + ' KB';
+      $('#dbInfo').innerHTML = `
+        <dt>Path</dt><dd class="mono" style="font-size:.68rem">${esc(d.db.path)}</dd>
+        <dt>Size</dt><dd class="mono">${(d.db.size_bytes / 1024).toFixed(1)} KB</dd>
+        <dt>Integrity</dt><dd><span class="pill ${d.db.integrity === 'ok' ? 'pill--ok' : 'pill--bad'}">${esc(d.db.integrity)}</span></dd>
+        <dt>Scans</dt><dd class="mono">${d.scans.total}</dd>
+        <dt>Products</dt><dd class="mono">${d.catalog.products}</dd>
+        <dt>Rules</dt><dd class="mono">${d.rules.total}</dd>
+        <dt>Server time</dt><dd class="mono">${esc(d.server_time)}</dd>`;
+    } catch (err) { toast(err.message, 'err'); }
+  }
+
+  $('#vacuumBtn').addEventListener('click', async () => {
+    try {
+      const r = await api('/vacuum', { method: 'POST' });
+      toast('Database compacted → ' + (r.size_bytes / 1024).toFixed(1) + ' KB', 'ok');
+      loadDbInfo();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+
+  $('#restoreFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!confirm(`Restore database from "${file.name}"? Current data will be replaced.`)) { e.target.value = ''; return; }
+    const fd = new FormData();
+    fd.append('file', file);
+    $('#restoreStatus').innerHTML = '<div class="mono-box">Uploading and verifying…</div>';
+    try {
+      const r = await fetch('/api/admin/backup', { method: 'POST', body: fd, credentials: 'same-origin' }).then((x) => x.json());
+      if (r.error) throw new Error(r.error);
+      $('#restoreStatus').innerHTML = '<div class="mono-box" style="color:var(--green)">Restore complete. Integrity: ' + esc(r.integrity) + '</div>';
+      toast('Database restored', 'ok');
+      loadOverview();
+    } catch (err) {
+      $('#restoreStatus').innerHTML = '<div class="mono-box" style="color:var(--red)">' + esc(err.message) + '</div>';
+    }
+    e.target.value = '';
+  });
+
+  /* ---------- MODAL CLOSING ---------- */
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('[data-close]')) e.target.closest('.modal').classList.remove('is-open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      $$('.modal').forEach((m) => m.classList.remove('is-open'));
+      closeDrawer();
+    }
+  });
+
+  /* ---------- BOOT ---------- */
+  checkSession();
+  const initial = location.hash.replace('#', '');
+  if (TITLES[initial]) setTimeout(() => showView(initial), 200);
+})();
+</script>
+</body>
+</html>

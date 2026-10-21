@@ -1,0 +1,16 @@
+# Core API + ML/CV engines (matches the imports in backend/*.py)
+Flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=21.2.0         # production WSGI server used by the container image
+easyocr>=1.7.0
+opencv-python>=4.8.0        # the container image installs libgl1/libglib2.0-0 for it
+pyzbar>=0.1.9          # needs the zbar shared library (apt: libzbar0 / brew: zbar)
+Pillow>=10.0.0
+numpy>=1.24.0
+python-dateutil>=2.8.0
+fpdf2>=2.7.0           # statutory certificate generator (pdf_report.py)
+
+# Optional: alternative OCR backend. Not imported by the current pipeline —
+# `ocr_engine.py` uses EasyOCR. Install only if you plan to swap the engine.
+# paddleocr>=2.6.0
+# paddlepaddle>=2.4.0

@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Local data - never commit the live database, uploads, reports or keys
+backend/compliance.db
+backend/compliance.db-journal
+backend/uploads/
+backend/reports/
+backend/*.pem
+*.db
+*.sqlite3
+
+# Node / Vercel
+node_modules/
+dist/
+.vercel/
+*.log
+npm-debug.log*
+
+# Editors / OS
+.vscode/
+.idea/
+.obsidian/
+.DS_Store
+Thumbs.db
+
+# Personal notes and unrelated projects (not part of this repo)
+study/
+ariba/
+dataset/
+docs/
+
+# Temp
+temp_*
+_*.py
+!run.py

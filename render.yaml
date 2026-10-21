@@ -1,0 +1,44 @@
+# Render blueprint - deploys the scanner API + admin console as one service.
+#
+#   1. push this repo to GitHub
+#   2. Render dashboard -> New -> Blueprint -> pick the repo (render.yaml is used)
+#   3. fill in the "sync: false" values when prompted
+#
+# The image needs 2 GB RAM (torch + easyocr), so the free tier is not enough.
+
+services:
+  - type: web
+    name: complianceai-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: standard
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DB_PATH
+        value: /data/compliance.db
+      - key: UPLOAD_FOLDER
+        value: /data/uploads
+      - key: REPORTS_FOLDER
+        value: /data/reports
+      - key: PYTHONIOENCODING
+        value: utf-8
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false          # required - set a strong password
+      - key: CORS_ORIGINS
+        sync: false          # the portfolio domain, e.g. https://your-site.vercel.app
+      - key: PUBLIC_API_URL
+        sync: false          # https://complianceai-api.onrender.com
+      - key: PUBLIC_ADMIN_URL
+        sync: false          # https://complianceai-api.onrender.com/admin
+      - key: PORTFOLIO_URL
+        sync: false          # https://your-site.vercel.app
+    disk:
+      name: complianceai-data
+      mountPath: /data
+      sizeGB: 1

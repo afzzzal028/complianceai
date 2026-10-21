@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ff2e88">
+    <title>ComplianceAI — India Legal Metrology Scanner (SIH 2026)</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #08080a;
+            --bg-secondary: #0e0e12;
+            --bg-card: rgba(18, 18, 24, 0.72);
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.09);
+            --glass-highlight: rgba(255, 46, 136, 0.15);
+            --text-primary: #f5f5f7;
+            --text-secondary: #9a9aa8;
+            --text-muted: #6b6b78;
+            
+            --accent: #ff2e88;
+            --accent-soft: #ff6bb5;
+            --accent-glow: rgba(255, 46, 136, 0.45);
+            --highlight: #e8ff00;
+            --highlight-glow: rgba(232, 255, 0, 0.35);
+            --success: #00f5a0;
+            --success-glow: rgba(0, 245, 160, 0.3);
+            --warning: #ffb703;
+            --danger: #ff4757;
+            --danger-glow: rgba(255, 71, 87, 0.3);
+            
+            --gradient-primary: linear-gradient(135deg, #ff2e88 0%, #ff6bb5 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
+            --gradient-danger: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            --gradient-success: linear-gradient(135deg, #00b894 0%, #00f5a0 100%);
+            
+            --font-display: 'Archivo Black', 'Arial Black', sans-serif;
+            --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Glow Background */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-glow-1 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 46, 136, 0.18) 0%, transparent 70%);
+            top: -150px;
+            right: -100px;
+            filter: blur(40px);
+            animation: pulse 12s ease-in-out infinite alternate;
+        }
+        .bg-glow-2 {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(232, 255, 0, 0.12) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            filter: blur(40px);
+            animation: pulse 15s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.15) translate(30px, 30px); }
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 16px 18px 80px 18px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0 20px 0;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .brand-title h1 {
+            font-size: 1.35em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, #ffd6e7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-title p {
+            font-size: 0.72em;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+        .lang-select {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 0.82em;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+        .lang-select option { background: var(--bg-secondary); color: #fff; }
+
+        /* Role Pill */
+        .role-pill {
+            background: rgba(255, 46, 136, 0.15);
+            border: 1px solid var(--accent);
+            color: #ffd6e7;
+            font-size: 0.72em;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        /* Top Mini Stats Dashboard */
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .mini-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 10px 8px;
+            text-align: center;
+            backdrop-filter: blur(16px);
+        }
+        .mini-stat-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15em;
+            font-weight: 700;
+        }
+        .mini-stat-num.green { color: var(--success); }
+        .mini-stat-num.red { color: var(--danger); }
+        .mini-stat-num.purple { color: #ff8ab8; }
+        .mini-stat-num.gold { color: var(--warning); }
+        .mini-stat-lbl {
+            font-size: 0.65em;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Navigation Bar (Glass Tabs) */
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: rgba(22, 22, 48, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 18px;
+            backdrop-filter: blur(20px);
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 10px 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.82em;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .nav-tab.active {
+            background: var(--gradient-primary);
+            color: #fff;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        /* Tab Content */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Card System */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .card-title {
+            font-size: 1.05em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-badge {
+            font-size: 0.7em;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        /* 1-Click Judge Demo Presets Bar */
+        .demo-bar-title {
+            font-size: 0.78em;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-presets-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        .demo-presets-row::-webkit-scrollbar { height: 4px; }
+        .demo-presets-row::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+        .demo-chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .demo-chip:hover {
+            border-color: var(--accent);
+            background: rgba(255, 46, 136, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Upload & Camera Zone */
+        .scan-viewport {
+            border: 2px dashed rgba(255, 46, 136, 0.3);
+            border-radius: 16px;
+            padding: 36px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: rgba(255, 46, 136, 0.02);
+            overflow: hidden;
+        }
+        .scan-viewport:hover {
+            border-color: var(--accent);
+            background: rgba(255, 46, 136, 0.06);
+        }
+        .scan-viewport.has-image {
+            padding: 10px;
+            border-style: solid;
+            border-color: var(--accent);
+        }
+
+        .scan-icon-circle {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 46, 136, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .scan-prompt h3 { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; }
+        .scan-prompt p { font-size: 0.82em; color: var(--text-muted); }
+
+        #previewImg {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            display: none;
+            object-fit: contain;
+            margin: 0 auto;
+        }
+        #videoFeed {
+            width: 100%;
+            max-height: 320px;
+            border-radius: 12px;
+            display: none;
+            object-fit: cover;
+        }
+        #fileInput { display: none; }
+
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 10px; margin-top: 14px; }
+        .btn {
+            flex: 1;
+            padding: 14px 18px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.92em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #fff;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--accent-glow);
+        }
+        .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+        .btn-secondary:hover { border-color: var(--accent); color: #fff; }
+        .btn-cam {
+            background: rgba(232, 255, 0, 0.12);
+            border: 1px solid var(--highlight);
+            color: var(--highlight);
+        }
+
+        /* Score Meter Section */
+        .score-meter-wrap {
+            text-align: center;
+            padding: 16px 0;
+        }
+        .score-ring {
+            width: 160px;
+            height: 160px;
+            position: relative;
+            margin: 0 auto 16px;
+        }
+        .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .score-ring circle {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+        }
+        .score-ring .bg { stroke: rgba(255, 255, 255, 0.05); }
+        .score-ring .progress {
+            stroke: var(--success);
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .score-inner-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.8em;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .score-sub { font-size: 0.75em; color: var(--text-muted); font-weight: 600; }
+
+        .grade-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.95em;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .grade-aplus, .grade-a { background: rgba(0, 245, 160, 0.15); color: var(--success); border: 1px solid var(--success); }
+        .grade-b { background: rgba(255, 183, 3, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+        .grade-c { background: rgba(255, 140, 0, 0.15); color: #ff8c00; border: 1px solid #ff8c00; }
+        .grade-d, .grade-f { background: rgba(255, 71, 87, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+
+        /* Statutory Penalty Banner */
+        .penalty-card {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.12), rgba(255, 183, 3, 0.05));
+            border: 1px solid rgba(255, 71, 87, 0.25);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            margin: 14px 0;
+        }
+        .penalty-sub { font-size: 0.75em; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .penalty-val { font-family: 'JetBrains Mono', monospace; font-size: 1.6em; font-weight: 800; color: var(--warning); margin: 4px 0; }
+        .penalty-act { font-size: 0.72em; color: #ff8ab8; }
+
+        /* 12-Rule List Grid */
+        .rules-list { display: grid; gap: 8px; margin-top: 12px; }
+        .rule-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        .rule-card:hover { background: rgba(255, 255, 255, 0.04); }
+        .rule-left { display: flex; align-items: center; gap: 10px; }
+        .rule-icon { font-size: 1.25em; }
+        .rule-texts h4 { font-size: 0.88em; font-weight: 600; }
+        .rule-texts p { font-size: 0.72em; color: var(--text-muted); }
+        .rule-tag {
+            font-size: 0.72em;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .tag-pass { background: rgba(0, 245, 160, 0.15); color: var(--success); }
+        .tag-fail { background: rgba(255, 71, 87, 0.15); color: var(--danger); }
+
+        /* Violations Accordion */
+        .viol-card {
+            background: rgba(255, 71, 87, 0.06);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 8px;
+        }
+        .viol-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .viol-title { font-size: 0.9em; font-weight: 700; color: #ff8585; }
+        .viol-sev {
+            font-size: 0.68em;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .sev-CRITICAL { background: var(--danger); color: #fff; }
+        .sev-MAJOR { background: #ffa502; color: #000; }
+        .sev-MINOR { background: rgba(255, 183, 3, 0.2); color: var(--warning); }
+        .viol-desc { font-size: 0.8em; color: var(--text-secondary); line-height: 1.4; }
+        .viol-pen { font-size: 0.75em; color: var(--warning); margin-top: 6px; font-weight: 600; }
+
+        /* Extracted Text List */
+        .ocr-scroll {
+            max-height: 160px;
+            overflow-y: auto;
+            display: grid;
+            gap: 6px;
+            padding-right: 6px;
+        }
+        .ocr-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ocr-conf {
+            background: rgba(255, 46, 136, 0.2);
+            color: #ffd6e7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        /* Analytics Tab Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            text-align: center;
+        }
+        .analytics-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5em;
+            font-weight: 800;
+        }
+        .analytics-lbl { font-size: 0.72em; color: var(--text-muted); margin-top: 4px; }
+
+        /* History Table */
+        .history-list { display: grid; gap: 8px; }
+        .history-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .history-item:hover { border-color: var(--accent); background: rgba(255, 46, 136, 0.05); }
+
+        /* Intelligence Feature Cards */
+        .intel-card {
+            background: linear-gradient(135deg, rgba(255, 46, 136, 0.08), rgba(232, 255, 0, 0.04));
+            border: 1px solid rgba(255, 46, 136, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .intel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .intel-icon { font-size: 1.2em; }
+        .intel-title { font-size: 0.9em; font-weight: 700; color: #ffd6e7; }
+        .intel-body { font-size: 0.82em; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Live Rule Registry (served from the admin-editable legal_rules table) */
+        .registry-note {
+            font-size: 0.78em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .registry-note a { color: var(--highlight); text-decoration: underline; }
+        .registry-grid { display: flex; flex-direction: column; gap: 8px; }
+        .registry-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius-sm);
+            background: var(--glass);
+        }
+        .registry-row.is-off { opacity: 0.45; border-left-color: var(--text-muted); }
+        .registry-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .registry-name { font-size: 0.86em; font-weight: 700; color: var(--text-primary); }
+        .registry-sec { font-size: 0.7em; color: var(--text-muted); font-family: var(--font-mono); }
+        .registry-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .registry-meta .sev {
+            font-size: 0.62em;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+        }
+        .sev-critical { background: rgba(255, 71, 87, 0.16); color: #ff8585; }
+        .sev-major { background: rgba(255, 183, 3, 0.16); color: #ffc94d; }
+        .sev-minor { background: rgba(255, 255, 255, 0.08); color: var(--text-secondary); }
+        .registry-meta .reg-weight,
+        .registry-meta .reg-pen,
+        .registry-meta .reg-off {
+            font-size: 0.68em;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+        .registry-meta .reg-off { color: var(--warning); }
+        .registry-empty { font-size: 0.8em; color: var(--text-muted); padding: 14px 0; }
+
+        /* Header cross links */
+        .header-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            font-size: 0.72em;
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+        .header-link:hover {
+            border-color: var(--highlight);
+            color: var(--highlight);
+            text-decoration: none;
+        }
+        .footer-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 6px; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; }
+        .footer-links a:hover { color: var(--highlight); }
+
+        /* Loading Spinner Overlay */
+        .loading-mask {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 8, 10, 0.92);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .loading-mask.active { display: flex; }
+        .scanner-ring {
+            width: 70px;
+            height: 70px;
+            border: 3px solid rgba(255, 46, 136, 0.2);
+            border-top-color: var(--highlight);
+            border-right-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title { font-size: 1.1em; font-weight: 700; }
+        .loading-subtitle { font-size: 0.82em; color: var(--text-muted); }
+
+        /* ============ MOBILE ============ */
+        @media (max-width: 640px) {
+            body { overflow-x: hidden; }
+            .container { padding: 12px 12px 80px 12px; }
+            .bg-glow-1 { width: 260px; height: 260px; }
+            .bg-glow-2 { width: 240px; height: 240px; }
+
+            .header { flex-wrap: wrap; gap: 10px; }
+            .header-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 6px; }
+            .header-link { padding: 6px 9px; font-size: 0.64em; }
+            .role-pill { display: none; }
+
+            .nav-tabs { overflow-x: auto; scrollbar-width: none; }
+            .nav-tabs::-webkit-scrollbar { display: none; }
+            .nav-tab { flex: 0 0 auto; padding: 9px 14px; }
+
+            .demo-presets-row { scrollbar-width: none; }
+            .demo-presets-row::-webkit-scrollbar { display: none; }
+            .demo-presets-row .demo-chip { flex: 0 0 auto; }
+
+            .registry-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .registry-meta { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 380px) {
+            .mini-stats { grid-template-columns: repeat(2, 1fr); }
+            .mini-stat-card { min-width: 0; }
+        }
+
+        /* Toast */
+        .toast-box {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.88em;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+        .toast-box.show { transform: translateX(-50%) translateY(0); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 0 10px;
+            color: var(--text-muted);
+            font-size: 0.75em;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow">
+        <div class="bg-glow-1"></div>
+        <div class="bg-glow-2"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-logo">⚖️</div>
+                <div class="brand-title">
+                    <h1>ComplianceAI</h1>
+                    <p data-i18n="tagline">Legal Metrology Radar • SIH 2026</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a class="header-link" href="{{ portfolio_url }}" target="_blank" rel="noopener" title="Afzal Siddiqui — ML Engineer Portfolio">◧ Portfolio</a>
+                <a class="header-link" href="{{ admin_url }}" target="_blank" rel="noopener" title="ComplianceAI Admin Panel">⚙ Admin</a>
+                <div class="role-pill" id="rolePill" onclick="toggleRole()" title="Switch User Role">
+                    <span id="roleIcon">👮‍♂️</span>
+                    <span id="roleLabel">Inspector</span>
+                </div>
+                <select class="lang-select" id="langSelect" onchange="switchLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="mr">मराठी</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="ml">മലയാളം</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Mini Stats Ribbon -->
+        <div class="mini-stats">
+            <div class="mini-stat-card">
+                <div class="mini-stat-num purple" id="topStatTotal">0</div>
+                <div class="mini-stat-lbl" data-i18n="stat_scanned">Scans</div>
+            </div>
+            <div class="mini-stat-card">
+                <div class="mini-stat-num green" id="topStatPass">0</div>
+                <div class="mini-stat-lbl" data-i18n="stat_passed">Passed</div>
+            </div>
+            <div class="mini-stat-card">
+                <div class="mini-stat-num red" id="topStatFail">0</div>
+                <div class="mini-stat-lbl" data-i18n="stat_failed">Violations</div>
+            </div>
+            <div class="mini-stat-card">
+                <div class="mini-stat-num gold" id="topStatPenalties">₹0</div>
+                <div class="mini-stat-lbl" data-i18n="stat_penalties">Penalties</div>
+            </div>
+        </div>
+
+        <!-- 5 Tab Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="setTab('scan')">
+                <span>📸</span><span data-i18n="tab_scan">Scan</span>
+            </button>
+            <button class="nav-tab" onclick="setTab('audit')">
+                <span>📊</span><span data-i18n="tab_audit">Audit</span>
+            </button>
+            <button class="nav-tab" onclick="setTab('history')">
+                <span>📜</span><span data-i18n="tab_history">History</span>
+            </button>
+            <button class="nav-tab" onclick="setTab('fraud')">
+                <span>🛡️</span><span data-i18n="tab_fraud">Radar</span>
+            </button>
+            <button class="nav-tab" onclick="setTab('rules')">
+                <span>⚖️</span><span data-i18n="tab_rulebook">Rules</span>
+            </button>
+        </nav>
+
+        <!-- ==================== TAB 1: SCANNER & PRESETS ==================== -->
+        <section class="tab-panel active" id="tab-scan">
+            <!-- 1-Click Judge Demo Presets -->
+            <div class="demo-bar-title">
+                <span data-i18n="demo_title">⚡ 1-Click Judge Demo Presets</span>
+                <span style="color:var(--highlight);font-size:0.85em;">Instant Eval</span>
+            </div>
+            <div class="demo-presets-row" id="demoPresetsRow">
+                <div class="demo-chip" onclick="loadDemoSample('maggi_sample')">🍜 Maggi Masala (Pass A+)</div>
+                <div class="demo-chip" onclick="loadDemoSample('overcharging_violation_sample')" style="border-color:var(--danger);color:#ff8585;">⚠️ Overpriced Sachet (Fail F)</div>
+                <div class="demo-chip" onclick="loadDemoSample('parle_sample')">🍪 Parle-G (Pass A+)</div>
+                <div class="demo-chip" onclick="loadDemoSample('amul_sample')">🧈 Amul Butter (Pass A+)</div>
+                <div class="demo-chip" onclick="loadDemoSample('surf_excel_sample')">🧼 Surf Excel (Non-Food)</div>
+                <div class="demo-chip" onclick="loadDemoSample('dettol_sample')">🧴 Dettol Handwash</div>
+            </div>
+
+            <!-- Upload & Camera Viewport -->
+            <div class="card" style="margin-top:12px;">
+                <div class="card-header">
+                    <span class="card-title">📸 <span data-i18n="scan_box_title">Packaged Commodity Scanner</span></span>
+                    <span class="card-badge" style="background:rgba(232,255,0,0.15);color:var(--highlight);">Multi-Pass OCR</span>
+                </div>
+
+                <div class="scan-viewport" id="scanViewport" onclick="triggerFileInput()">
+                    <div class="scan-prompt" id="scanPrompt">
+                        <div class="scan-icon-circle">🔍</div>
+                        <h3 data-i18n="scan_prompt_h3">Capture or Upload Product Photo</h3>
+                        <p data-i18n="scan_prompt_p">Supports Hindi/English declarations, barcodes & MRP panels</p>
+                    </div>
+                    <img id="previewImg" alt="Product Scan Preview">
+                    <video id="videoFeed" autoplay playsinline></video>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" capture="environment">
+
+                <div class="btn-group">
+                    <button class="btn btn-cam" id="camToggleBtn" onclick="toggleCameraStream()">
+                        <span>🎥</span> <span id="camBtnLabel">Live Camera</span>
+                    </button>
+                    <button class="btn btn-primary" id="analyzeBtn" disabled onclick="runAnalysis()">
+                        <span>⚡</span> <span data-i18n="btn_analyze">Analyze Compliance</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: AUDIT & PENALTIES ==================== -->
+        <section class="tab-panel" id="tab-audit">
+            <div class="card" id="auditCard">
+                <!-- Score Meter -->
+                <div class="score-meter-wrap">
+                    <div class="score-ring">
+                        <svg viewBox="0 0 160 160">
+                            <circle class="bg" cx="80" cy="80" r="70"/>
+                            <circle class="progress" id="scoreCircle" cx="80" cy="80" r="70"/>
+                        </svg>
+                        <div class="score-inner-text">
+                            <div class="score-val" id="scoreVal">0</div>
+                            <div class="score-sub">/ 100 SCORE</div>
+                        </div>
+                    </div>
+                    <div class="grade-badge grade-aplus" id="gradeBadge">A+ COMPLIANT</div>
+                </div>
+
+                <!-- Statutory Penalty Banner -->
+                <div class="penalty-card">
+                    <div class="penalty-sub" data-i18n="statutory_penalty_title">Section 36 Statutory Penalty Liability</div>
+                    <div class="penalty-val" id="penaltyVal">₹0</div>
+                    <div class="penalty-act">Legal Metrology Act, 2009 & Compounding Offence Rules</div>
+                </div>
+
+                <!-- Export PDF Certificate Button -->
+                <button class="btn btn-primary" id="pdfBtn" style="width:100%;margin-bottom:16px;" onclick="downloadCertificate()">
+                    <span>📄</span> <span data-i18n="btn_download_pdf">Download Official Form LM-2026 PDF</span>
+                </button>
+
+                <!-- Violations Section -->
+                <div id="violationsWrapper" style="display:none;margin-bottom:18px;">
+                    <div class="card-header" style="margin-bottom:8px;">
+                        <span class="card-title" style="color:#ff8585;">⚠️ <span data-i18n="violations_flagged">Violations Flagged</span></span>
+                    </div>
+                    <div id="violationsList"></div>
+                </div>
+
+                <!-- 12-Rule Audit List -->
+                <div class="card-header">
+                    <span class="card-title">📋 <span data-i18n="rule_audit_title">12-Rule Legal Metrology Checklist</span></span>
+                </div>
+                <div class="rules-list" id="rulesList"></div>
+
+                <!-- Extracted Text Drawer -->
+                <div style="margin-top:20px;">
+                    <div class="card-header" style="margin-bottom:8px;">
+                        <span class="card-title">📄 <span data-i18n="ocr_extracted_title">Extracted Packaging Text (OCR)</span></span>
+                    </div>
+                    <div class="ocr-scroll" id="ocrList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: SCAN HISTORY & ANALYTICS ==================== -->
+        <section class="tab-panel" id="tab-history">
+            <!-- Analytics Cards -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📈 <span data-i18n="analytics_title">Inspection Analytics Dashboard</span></span>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-num green" id="anPassRate">100%</div>
+                        <div class="analytics-lbl" data-i18n="an_pass_rate">Compliance Rate</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-num purple" id="anAvgScore">0.0</div>
+                        <div class="analytics-lbl" data-i18n="an_avg_score">Avg Score</div>
+                    </div>
+                </div>
+
+                <!-- Filter & Search -->
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="text" id="historySearch" placeholder="Search product or scan ID..." style="flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--glass-border);padding:8px 12px;border-radius:8px;color:#fff;font-family:inherit;font-size:0.85em;" oninput="loadHistory()">
+                    <button class="btn btn-secondary" style="flex:0 0 auto;padding:8px 12px;font-size:0.8em;" onclick="clearHistoryRecords()">Clear</button>
+                </div>
+
+                <!-- History Items List -->
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: FRAUD & PRICE RADAR ==================== -->
+        <section class="tab-panel" id="tab-fraud">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🛡️ <span data-i18n="fraud_radar_title">Anti-Tamper & Price Intelligence</span></span>
+                </div>
+
+                <!-- Sticker Overcharging Check -->
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">🏷️</span>
+                        <span class="intel-title">Pasted Label & Over-stickered MRP Check</span>
+                    </div>
+                    <div class="intel-body" id="tamperReportText">
+                        Visual analysis scans for rectangular label overlays and dual-pricing conflicts under Section 36(2) LM Act.
+                    </div>
+                </div>
+
+                <!-- Unit Sale Price Mathematical Check -->
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">➗</span>
+                        <span class="intel-title">Unit Sale Price (USP) Mathematical Validator</span>
+                    </div>
+                    <div class="intel-body" id="uspMathReportText">
+                        Verifies if declared USP matches mathematical (MRP / Net Quantity).
+                    </div>
+                </div>
+
+                <!-- FMCG Product Catalog Comparison -->
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">🛒</span>
+                        <span class="intel-title">Central FMCG Catalog Price Verification</span>
+                    </div>
+                    <div class="intel-body" id="catalogReportText">
+                        Compares scanned price against 20+ verified Indian manufacturer catalog prices to flag retailer overcharging.
+                    </div>
+                </div>
+
+                <!-- GS1 India 890 Traceability -->
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">🇮🇳</span>
+                        <span class="intel-title">GS1 India (Prefix 890) Origin Certificate</span>
+                    </div>
+                    <div class="intel-body" id="gs1ReportText">
+                        Verifies Made in India barcode standard and EAN-13 checksum integrity.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: LEGAL RULEBOOK ==================== -->
+        <section class="tab-panel" id="tab-rules">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">⚖️ <span data-i18n="registry_title">Live Rule Registry</span></span>
+                    <span class="card-badge" id="registryBadge">loading</span>
+                </div>
+                <p class="registry-note">
+                    This is the exact registry the scoring engine reads on every scan.
+                    Edit a rule, its weight or its penalty band in the
+                    <a href="{{ admin_url }}" target="_blank" rel="noopener">Admin Panel</a>
+                    and it changes here and on the next scan — no restart required.
+                </p>
+                <div class="registry-grid" id="registryGrid">
+                    <div class="registry-empty">Loading live registry…</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">⚖️ <span data-i18n="rulebook_title">Statutory Legal Metrology Guide</span></span>
+                </div>
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">📜</span>
+                        <span class="intel-title">Rule 6: Declarations on Packaged Goods</span>
+                    </div>
+                    <div class="intel-body">
+                        Mandates Name/Address of Manufacturer, Generic Name, Net Mass/Volume, Month/Year of Mfg, MRP (incl. of all taxes), Unit Sale Price (2022 amendment), and Consumer Care details.
+                    </div>
+                </div>
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">⚠️</span>
+                        <span class="intel-title">Section 36: Penalties for Non-Compliance</span>
+                    </div>
+                    <div class="intel-body">
+                        First Offense: Up to ₹25,000 fine.<br>
+                        Second Offense: Up to ₹50,000 fine.<br>
+                        Subsequent: Up to ₹1,00,000 fine or imprisonment up to 1 year.
+                    </div>
+                </div>
+                <div class="intel-card">
+                    <div class="intel-header">
+                        <span class="intel-icon">🍏</span>
+                        <span class="intel-title">FSSAI Packaging & Labelling Reg. 2020</span>
+                    </div>
+                    <div class="intel-body">
+                        14-digit FSSAI License, Veg/Non-Veg Logo (Green/Brown dot), and Expiry/Best Before duration are strictly mandatory on all food commodities.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer">
+            ComplianceAI v2.0 • Smart India Hackathon 2026 • Legal Metrology Act, 2009
+            <div class="footer-links">
+                <a href="{{ scanner_url }}" title="Scanner">Scanner</a>
+                <a href="{{ admin_url }}" target="_blank" rel="noopener" title="Admin Panel">Admin Panel</a>
+                <a href="{{ portfolio_url }}" target="_blank" rel="noopener" title="Portfolio">Portfolio</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Mask -->
+    <div class="loading-mask" id="loadingMask">
+        <div class="scanner-ring"></div>
+        <div class="loading-title" data-i18n="analyzing_title">Running Multi-Pass AI Pipeline...</div>
+        <div class="loading-subtitle" id="loadingRuleCount">Checking 12 Legal Metrology Rules & Barcodes</div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-box" id="toastBox">Notification</div>
+
+    <script>
+        // ==================== 8-Language i18n Dictionary ====================
+        const translations = {
+            en: {
+                tagline: "Legal Metrology Radar • SIH 2026",
+                stat_scanned: "Scans",
+                stat_passed: "Passed",
+                stat_failed: "Violations",
+                stat_penalties: "Penalties",
+                tab_scan: "Scan",
+                tab_audit: "Audit",
+                tab_history: "History",
+                tab_fraud: "Radar",
+                tab_rulebook: "Rules",
+                demo_title: "⚡ 1-Click Judge Demo Presets",
+                scan_box_title: "Packaged Commodity Scanner",
+                scan_prompt_h3: "Capture or Upload Product Photo",
+                scan_prompt_p: "Supports Hindi/English declarations, barcodes & MRP panels",
+                btn_analyze: "Analyze Compliance",
+                statutory_penalty_title: "Section 36 Statutory Penalty Liability",
+                btn_download_pdf: "Download Official Form LM-2026 PDF",
+                violations_flagged: "Violations Flagged",
+                rule_audit_title: "12-Rule Legal Metrology Checklist",
+                ocr_extracted_title: "Extracted Packaging Text (OCR)",
+                analytics_title: "Inspection Analytics Dashboard",
+                an_pass_rate: "Compliance Rate",
+                an_avg_score: "Avg Score",
+                fraud_radar_title: "Anti-Tamper & Price Intelligence",
+                rulebook_title: "Statutory Legal Metrology Guide",
+                analyzing_title: "Running Multi-Pass AI Pipeline..."
+            },
+            hi: {
+                tagline: "विधिक मापविज्ञान रडार • SIH 2026",
+                stat_scanned: "स्कैन",
+                stat_passed: "उत्तीर्ण",
+                stat_failed: "उल्लंघन",
+                stat_penalties: "जुर्माना",
+                tab_scan: "स्कैन",
+                tab_audit: "ऑडिट",
+                tab_history: "इतिहास",
+                tab_fraud: "रडार",
+                tab_rulebook: "नियम",
+                demo_title: "⚡ 1-क्लिक जज डेमो सैंपल",
+                scan_box_title: "पैकेज्ड वस्तु अनुपालन स्कैनर",
+                scan_prompt_h3: "उत्पाद का फोटो लें या अपलोड करें",
+                scan_prompt_p: "हिंदी/अंग्रेजी घोषणाएं, बारकोड और MRP पैनल समर्थित",
+                btn_analyze: "अनुपालन विश्लेषण करें",
+                statutory_penalty_title: "धारा 36 वैधानिक जुर्माना देयता",
+                btn_download_pdf: "आधिकारिक फॉर्म LM-2026 PDF डाउनलोड करें",
+                violations_flagged: "पहचाने गए उल्लंघन",
+                rule_audit_title: "12-सूत्रीय विधिक मापविज्ञान चेकलिस्ट",
+                ocr_extracted_title: "निकाला गया पैकेजिंग टेक्स्ट (OCR)",
+                analytics_title: "निरीक्षण एनालिटिक्स डैशबोर्ड",
+                an_pass_rate: "अनुपालन दर",
+                an_avg_score: "औसत स्कोर",
+                fraud_radar_title: "धोखाधड़ी रोकथाम और मूल्य रडार",
+                rulebook_title: "वैधानिक विधिक मापविज्ञान गाइड",
+                analyzing_title: "AI अनुपालन विश्लेषण प्रगति पर है..."
+            },
+            ta: {
+                tagline: "சட்ட அளவையியல் ரேடார் • SIH 2026",
+                stat_scanned: "ஸ்கேன்",
+                stat_passed: "தேர்ச்சி",
+                stat_failed: "மீறல்கள்",
+                stat_penalties: "அபராதம்",
+                tab_scan: "ஸ்கேன்",
+                tab_audit: "ஆடிட்",
+                tab_history: "வரலாறு",
+                tab_fraud: "ரேடார்",
+                tab_rulebook: "விதிகள்",
+                demo_title: "⚡ 1-கிளிக் நீதிபதி டெமோ மாதிரி",
+                scan_box_title: "தயாரிப்பு இணக்க ஸ்கேனர்",
+                btn_analyze: "இணக்கத்தை ஆய்வு செய்",
+                btn_download_pdf: "அதிகாரப்பூர்வ LM-2026 PDF பதிவிறக்கு"
+            },
+            te: {
+                tagline: "లీగల్ మెట్రాలజీ రాడార్ • SIH 2026",
+                stat_scanned: "స్కాన్లు",
+                stat_passed: "పాస్",
+                stat_failed: "ఉల్లంఘనలు",
+                tab_scan: "స్కాన్",
+                tab_audit: "ఆడిట్",
+                btn_analyze: "విశ్లేషించండి",
+                btn_download_pdf: "LM-2026 PDF డౌన్‌లోడ్ చేయండి"
+            },
+            bn: {
+                tagline: "লিগ্যাল মেট্রোলজি রাডার • SIH 2026",
+                stat_scanned: "স্ক্যান",
+                stat_passed: "উত্তীর্ণ",
+                stat_failed: "লঙ্ঘন",
+                tab_scan: "স্ক্যান",
+                tab_audit: "অডিট",
+                btn_analyze: "বিশ্লেষণ করুন",
+                btn_download_pdf: "LM-2026 PDF ডাউনলোড করুন"
+            },
+            mr: {
+                tagline: "कायदेशीर मेट्रोलॉजी रडार • SIH 2026",
+                stat_scanned: "स्कॅन",
+                stat_passed: "पास",
+                stat_failed: "उल्लंघन",
+                tab_scan: "स्कॅन",
+                tab_audit: "ऑडिट",
+                btn_analyze: "विश्लेषण करा",
+                btn_download_pdf: "LM-2026 PDF डाउनलोड करा"
+            },
+            kn: {
+                tagline: "ಕಾನೂನು ಮಾಪನಶಾಸ್ತ್ರ ರಾಡಾರ್ • SIH 2026",
+                stat_scanned: "ಸ್ಕ್ಯಾನ್",
+                stat_passed: "ಪಾಸ್",
+                stat_failed: "ಉಲ್ಲಂಘನೆಗಳು",
+                tab_scan: "ಸ್ಕ್ಯಾನ್",
+                tab_audit: "ಆಡಿಟ್",
+                btn_analyze: "ವಿಶ್ಲೇಷಿಸಿ",
+                btn_download_pdf: "LM-2026 PDF ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"
+            },
+            ml: {
+                tagline: "ലീഗൽ മെട്രോളജി റഡാർ • SIH 2026",
+                stat_scanned: "സ്കാനുകൾ",
+                stat_passed: "പാസ്സായി",
+                stat_failed: "ലംഘനങ്ങൾ",
+                tab_scan: "സ്കാൻ",
+                tab_audit: "ഓഡിറ്റ്",
+                btn_analyze: "പരിശോധിക്കുക",
+                btn_download_pdf: "LM-2026 PDF ഡൗൺലോഡ് ചെയ്യുക"
+            }
+        };
+
+        let currentLang = 'en';
+        let currentRole = 'Inspector'; // 'Inspector', 'Consumer', 'Manufacturer'
+        let currentScanData = null;
+        let selectedFile = null;
+        let mediaStream = null;
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                } else if (translations.en[key]) {
+                    el.textContent = translations.en[key];
+                }
+            });
+            showToast(lang === 'en' ? 'Language switched to English' : 'भाषा बदली गई');
+        }
+
+        function toggleRole() {
+            const roles = ['Inspector', 'Consumer', 'Manufacturer'];
+            const icons = { Inspector: '👮‍♂️', Consumer: '🛒', Manufacturer: '🏭' };
+            let idx = (roles.indexOf(currentRole) + 1) % roles.length;
+            currentRole = roles[idx];
+            document.getElementById('roleIcon').textContent = icons[currentRole];
+            document.getElementById('roleLabel').textContent = currentRole;
+            showToast('Role switched to: ' + currentRole + ' Mode');
+        }
+
+        function setTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if (tabId === 'history') loadHistory();
+            if (tabId === 'rules') loadRuleRegistry();
+        }
+
+        // ==================== Live Rule Registry ====================
+        async function loadRuleRegistry() {
+            const grid = document.getElementById('registryGrid');
+            const badge = document.getElementById('registryBadge');
+            if (!grid) return;
+            try {
+                const res = await fetch('/api/rules');
+                const data = await res.json();
+                const s = data.summary || {};
+                if (badge) badge.textContent = `${s.active || 0} active / ${s.total || 0} registered`;
+                const rules = data.rules || [];
+                if (!rules.length) {
+                    grid.innerHTML = '<div class="registry-empty">No rules registered yet.</div>';
+                    return;
+                }
+                grid.innerHTML = rules.map(r => {
+                    const off = [];
+                    if (!r.enabled) off.push('disabled');
+                    if (!r.implemented) off.push('no auto check');
+                    const weights = r.weight_non_food !== r.weight
+                        ? `${r.weight} pts food / ${r.weight_non_food} non-food`
+                        : `${r.weight} pts`;
+                    return `
+                    <div class="registry-row ${r.enabled && r.implemented ? '' : 'is-off'}">
+                        <div class="registry-main">
+                            <span class="registry-name">${r.rule_name}</span>
+                            <span class="registry-sec">${r.act_section || ''}</span>
+                        </div>
+                        <div class="registry-meta">
+                            <span class="sev sev-${String(r.severity || 'MINOR').toLowerCase()}">${r.severity || 'MINOR'}</span>
+                            <span class="reg-weight">${weights}</span>
+                            <span class="reg-pen">₹${Number(r.penalty_min || 0).toLocaleString()}–₹${Number(r.penalty_max || 0).toLocaleString()}</span>
+                            ${off.length ? `<span class="reg-off">${off.join(' • ')}</span>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                grid.innerHTML = '<div class="registry-empty">Registry unavailable — is the scanner API running?</div>';
+                if (badge) badge.textContent = 'offline';
+            }
+        }
+
+        // ==================== Camera & File Handling ====================
+        function triggerFileInput() {
+            if (!mediaStream) {
+                document.getElementById('fileInput').click();
+            }
+        }
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const preview = document.getElementById('previewImg');
+                preview.src = ev.target.result;
+                preview.style.display = 'block';
+                document.getElementById('scanPrompt').style.display = 'none';
+                document.getElementById('scanViewport').classList.add('has-image');
+                document.getElementById('analyzeBtn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        async function toggleCameraStream() {
+            const video = document.getElementById('videoFeed');
+            const preview = document.getElementById('previewImg');
+            const prompt = document.getElementById('scanPrompt');
+            const camBtn = document.getElementById('camBtnLabel');
+
+            if (mediaStream) {
+                // Capture frame from stream
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                canvas.toBlob((blob) => {
+                    selectedFile = new File([blob], 'camera_capture.jpg', { type: 'image/jpeg' });
+                    preview.src = canvas.toDataURL('image/jpeg');
+                    preview.style.display = 'block';
+                    video.style.display = 'none';
+                    document.getElementById('analyzeBtn').disabled = false;
+                }, 'image/jpeg');
+
+                // Stop stream
+                mediaStream.getTracks().forEach(t => t.stop());
+                mediaStream = null;
+                camBtn.textContent = 'Live Camera';
+                return;
+            }
+
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 } }
+                });
+                video.srcObject = mediaStream;
+                video.style.display = 'block';
+                preview.style.display = 'none';
+                prompt.style.display = 'none';
+                camBtn.textContent = '📸 Snap Photo';
+            } catch (err) {
+                showToast('Camera access unavailable. Using file selector.');
+                document.getElementById('fileInput').click();
+            }
+        }
+
+        // ==================== Analysis & Demo Loader ====================
+        async function runAnalysis() {
+            if (!selectedFile) return;
+            showLoading(true);
+
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            try {
+                const res = await fetch('/api/analyze', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.error) {
+                    showToast('Scan Error: ' + data.error);
+                    showLoading(false);
+                    return;
+                }
+                renderAuditReport(data);
+                showToast('Scan completed successfully!');
+                // Auto switch to audit tab
+                document.querySelectorAll('.nav-tab')[1].click();
+            } catch (err) {
+                showToast('Server connection failed: ' + err.message);
+            }
+            showLoading(false);
+            refreshTopStats();
+        }
+
+        async function loadDemoSample(sampleId) {
+            showLoading(true);
+            try {
+                const res = await fetch('/api/demo-samples');
+                const data = await res.json();
+                const sample = data.samples.find(s => s.id === sampleId);
+                if (sample && sample.mock_data) {
+                    setTimeout(() => {
+                        renderAuditReport(sample.mock_data);
+                        showLoading(false);
+                        document.querySelectorAll('.nav-tab')[1].click();
+                        showToast('Loaded demo: ' + sample.name);
+                    }, 400);
+                } else {
+                    showToast('Demo data initialized');
+                    showLoading(false);
+                }
+            } catch (err) {
+                showToast('Failed to load demo preset');
+                showLoading(false);
+            }
+        }
+
+        // ==================== Render Audit Report ====================
+        function renderAuditReport(data) {
+            currentScanData = data;
+            const s = data.summary;
+            const score = s.score;
+
+            // Score Dial Animation
+            const scoreVal = document.getElementById('scoreVal');
+            const scoreCircle = document.getElementById('scoreCircle');
+            const gradeBadge = document.getElementById('gradeBadge');
+            
+            scoreVal.textContent = score;
+            const color = score >= 80 ? '#00f5a0' : (score >= 60 ? '#ffb703' : '#ff4757');
+            scoreVal.style.color = color;
+            scoreCircle.style.stroke = color;
+            scoreCircle.style.strokeDashoffset = 440 - (440 * score / 100);
+
+            gradeBadge.textContent = `GRADE ${s.grade} (${s.is_compliant ? 'COMPLIANT' : 'VIOLATIONS'})`;
+            gradeBadge.className = 'grade-badge grade-' + s.grade.toLowerCase().replace('+', 'plus');
+
+            // Statutory Penalty
+            document.getElementById('penaltyVal').textContent = s.total_penalty;
+
+            // Violations List
+            const violWrapper = document.getElementById('violationsWrapper');
+            const violList = document.getElementById('violationsList');
+            if (data.violations && data.violations.length > 0) {
+                violWrapper.style.display = 'block';
+                violList.innerHTML = '';
+                data.violations.forEach(v => {
+                    violList.innerHTML += `
+                        <div class="viol-card">
+                            <div class="viol-header">
+                                <span class="viol-title">${v.rule_name}</span>
+                                <span class="viol-sev sev-${v.severity}">${v.severity}</span>
+                            </div>
+                            <div class="viol-desc">${v.act_section} • Lost Weight: ${v.weight_lost || '-'} pts</div>
+                            <div class="viol-pen">Penalty: ${v.penalty_range}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                violWrapper.style.display = 'none';
+            }
+
+            // 12-Rule List Grid
+            const ruleIcons = {
+                mrp: '💰', unit_sale_price: '➗', weight: '⚖️', mfg_date: '📅',
+                expiry: '⏰', manufacturer: '🏭', country_of_origin: '🇮🇳',
+                consumer_care: '📞', fssai: '🍏', commodity_name: '📦',
+                barcode: '📊', language: '🌐'
+            };
+            const rulesList = document.getElementById('rulesList');
+            rulesList.innerHTML = '';
+            (data.rule_checks || []).forEach(r => {
+                rulesList.innerHTML += `
+                    <div class="rule-card">
+                        <div class="rule-left">
+                            <span class="rule-icon">${ruleIcons[r.rule] || '📋'}</span>
+                            <div class="rule-texts">
+                                <h4>${r.rule_name}</h4>
+                                <p>${r.act_section} • Weight: ${r.weight} pts</p>
+                            </div>
+                        </div>
+                        <span class="rule-tag ${r.passed ? 'tag-pass' : 'tag-fail'}">${r.passed ? '✓ PASS' : '✗ FAIL'}</span>
+                    </div>
+                `;
+            });
+
+            // Extracted OCR text
+            const ocrList = document.getElementById('ocrList');
+            ocrList.innerHTML = '';
+            (data.extracted_data || []).forEach(d => {
+                ocrList.innerHTML += `
+                    <div class="ocr-item">
+                        <span>${d.text}</span>
+                        <span class="ocr-conf">${Math.round((d.confidence || 0.9) * 100)}%</span>
+                    </div>
+                `;
+            });
+
+            // Update Radar findings
+            const fraud = data.fraud_analysis || {};
+            if (fraud.tamper_detection) {
+                document.getElementById('tamperReportText').textContent = fraud.tamper_detection.details;
+            }
+            if (fraud.usp_verification) {
+                document.getElementById('uspMathReportText').textContent = fraud.usp_verification.verdict;
+            }
+            if (fraud.catalog_comparison) {
+                document.getElementById('catalogReportText').textContent = fraud.catalog_comparison.verdict;
+            }
+            if (data.barcode_data && data.barcode_data.country_of_origin) {
+                document.getElementById('gs1ReportText').textContent = `Barcode: ${data.barcode_data.primary_code || 'N/A'} • ${data.barcode_data.country_of_origin}`;
+            }
+        }
+
+        // ==================== Download PDF ====================
+        function downloadCertificate() {
+            if (!currentScanData || !currentScanData.scan_id) {
+                showToast('Please run a scan first');
+                return;
+            }
+            const url = currentScanData.pdf_download_url || `/api/export-pdf/${currentScanData.scan_id}`;
+            window.open(url, '_blank');
+        }
+
+        // ==================== History & Analytics ====================
+        async function loadHistory() {
+            try {
+                const search = document.getElementById('historySearch').value;
+                const res = await fetch(`/api/history?search=${encodeURIComponent(search)}`);
+                const data = await res.json();
+                const list = document.getElementById('historyList');
+                list.innerHTML = '';
+
+                if (data.scans.length === 0) {
+                    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">No scan records found</div>';
+                    return;
+                }
+
+                data.scans.forEach(s => {
+                    list.innerHTML += `
+                        <div class="history-item" onclick="loadHistoryItem('${s.scan_id}')">
+                            <div>
+                                <div style="font-weight:700;font-size:0.9em;">${s.product_name || 'Packaged Commodity'}</div>
+                                <div style="font-size:0.75em;color:var(--text-muted);">${s.timestamp} • ${s.category}</div>
+                            </div>
+                            <span class="rule-tag ${s.is_compliant ? 'tag-pass' : 'tag-fail'}">${s.grade} (${s.score}/100)</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadHistoryItem(scanId) {
+            try {
+                const res = await fetch(`/api/scan/${scanId}`);
+                const data = await res.json();
+                renderAuditReport(data);
+                document.querySelectorAll('.nav-tab')[1].click();
+            } catch (err) {
+                showToast('Failed to load scan record');
+            }
+        }
+
+        async function clearHistoryRecords() {
+            if (confirm('Clear all scan history?')) {
+                await fetch('/api/clear-history', { method: 'POST' });
+                loadHistory();
+                refreshTopStats();
+                showToast('History cleared');
+            }
+        }
+
+        async function refreshTopStats() {
+            try {
+                const res = await fetch('/api/analytics');
+                const a = await res.json();
+                document.getElementById('topStatTotal').textContent = a.total_scans;
+                document.getElementById('topStatPass').textContent = a.compliant_scans;
+                document.getElementById('topStatFail').textContent = a.failed_scans;
+                document.getElementById('topStatPenalties').textContent = a.total_penalties_flagged;
+                
+                document.getElementById('anPassRate').textContent = `${a.compliance_rate}%`;
+                document.getElementById('anAvgScore').textContent = a.average_score;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingMask').classList.toggle('active', show);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Register Service Worker for Offline PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration note:', err));
+            });
+        }
+
+        // Auto load initial stats
+        refreshTopStats();
+        loadRuleRegistry();
+        loadRuleCount();
+
+        // Keep the "N rules" counter in the loading mask in sync with the registry
+        async function loadRuleCount() {
+            try {
+                const res = await fetch('/api/health');
+                const h = await res.json();
+                const el = document.getElementById('loadingRuleCount');
+                if (el && h.rule_count) el.textContent = `Checking ${h.rule_count} Legal Metrology Rules & Barcodes`;
+            } catch (err) { /* keep the default copy */ }
+        }
+    </script>
+</body>
+</html>
