@@ -39,3 +39,6 @@ docs/
 temp_*
 _*.py
 !run.py
+
+.vercel
+.env*

@@ -18,8 +18,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# CPU-only torch keeps the image roughly 1 GB smaller than the default wheel
-RUN pip install --index-url https://download.pytorch.org/whl/cpu torch==2.4.1+cpu
+# CPU-only torch keeps the image roughly 1 GB smaller than the default wheel.
+# torchvision MUST come from the same CPU index, otherwise pip resolves a CUDA
+# build that does not match the installed torch and easyocr breaks on import.
+RUN pip install --index-url https://download.pytorch.org/whl/cpu \
+        torch==2.4.1+cpu \
+        torchvision==0.19.1+cpu
 
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install -r /app/backend/requirements.txt
@@ -31,9 +35,10 @@ COPY run.py /app/run.py
 ENV DB_PATH=/data/compliance.db \
     UPLOAD_FOLDER=/data/uploads \
     REPORTS_FOLDER=/data/reports \
+    EASYOCR_MODULE_PATH=/data/easyocr \
     PORT=5000
 
-RUN mkdir -p /data/uploads /data/reports && \
+RUN mkdir -p /data/uploads /data/reports /data/easyocr && \
     useradd -m -u 1000 appuser && chown -R appuser:appuser /app /data
 USER appuser
 

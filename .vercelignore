@@ -4,3 +4,26 @@ dist
 .vercel
 *.log
 .DS_Store
+__pycache__
+**/__pycache__
+.env*
+
+# Only the portfolio is deployed to Vercel.
+# The scanner API runs from backend/Dockerfile on a container host.
+backend
+ariba
+study
+dataset
+docs
+
+# never upload secrets or data
+*.pem
+*.key
+*.db
+uploads
+reports
+
+# personal planning notes
+30-day-unstoppable-plan.md
+PS_*.md
+cyber_idea_analysis.md

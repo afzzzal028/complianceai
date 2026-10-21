@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import easyocr
+import os
 import re
 
 
@@ -10,8 +11,15 @@ class ProductOCR:
     Multi-Scale Image Preprocessing and Indian Packaging Domain Normalizer.
     """
     def __init__(self):
-        # Initialize EasyOCR reader (English by default, robust CPU inference)
-        self.reader = easyocr.Reader(['en'], gpu=False, verbose=False)
+        # Keep the model cache on the persistent volume in a container, so the
+        # ~100 MB of weights are downloaded once instead of on every deploy.
+        model_dir = os.environ.get('EASYOCR_MODULE_PATH')
+        kwargs = {'gpu': False, 'verbose': False}
+        if model_dir:
+            os.makedirs(model_dir, exist_ok=True)
+            kwargs['model_storage_directory'] = model_dir
+            kwargs['download_enabled'] = True
+        self.reader = easyocr.Reader(['en'], **kwargs)
 
     def preprocess_variants(self, image):
         """
