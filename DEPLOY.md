@@ -36,6 +36,15 @@ Without them the site still deploys, but the buttons point at `localhost`.
 
 ## 2. API -> Render (or any Docker host)
 
+### One click
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/afzzzal028/complianceai)
+
+Type one admin password, Render builds the image and starts the service. The
+public URL is `https://complianceai-api.onrender.com`.
+
+### Manual
+
 The repo contains `render.yaml`, so Render can deploy it as a blueprint:
 **New -> Blueprint -> select the repo -> fill in the prompted values.**
 
